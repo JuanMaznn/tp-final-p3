@@ -1,0 +1,14 @@
+info:
+  name: get id obras sociales
+  type: http
+
+http:
+  method: GET
+  url: http://localhost:3000/obras-sociales/1
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

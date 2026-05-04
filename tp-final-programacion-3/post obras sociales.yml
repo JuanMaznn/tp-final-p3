@@ -1,0 +1,24 @@
+info:
+  name: post obras sociales
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3000/obras-sociales
+  body:
+    type: json
+    data: |-
+      {
+        "nombre": "IOSPER",
+        "descripcion": "Obra social de Entre Ríos",
+        "porcentaje_descuento": 9.0,
+        "es_particular": 0
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

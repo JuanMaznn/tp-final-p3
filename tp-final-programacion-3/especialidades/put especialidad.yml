@@ -1,0 +1,20 @@
+info:
+  name: put especialidad
+  type: http
+
+http:
+  method: PUT
+  url: http://localhost:3000/especialidades/10
+  body:
+    type: json
+    data: |-
+      {
+        "nombre": "nada"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
