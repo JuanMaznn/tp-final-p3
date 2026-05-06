@@ -4,7 +4,7 @@ import { testConexion } from './db/test.js';
 
 import { check } from 'express-validator';
 import { param } from "express-validator";
-import { validarCampos } from "./middlewares/validarCampos.js";
+import { validarCampos } from "./src/middlewares/validarCampos.js";
 
 const app = express();
 

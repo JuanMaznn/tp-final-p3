@@ -3,7 +3,6 @@
 ## Comandos
 - npm install
 
-
 - node --watch index.js
 - npm run dev  (modo desarrollo)
 - npm start (ejecuta el backend)
