@@ -1,7 +1,7 @@
 import express from 'express';
 import { testConexion } from './db/test.js';
-import especialidadesRoutes from './src/router/especialidades.routes.js';
-import obrasSocialesRoutes from './src/router/obrasSociales.routes.js';
+import obrasSocialesRoutes from './router/obrasSociales.routes.js';
+import { router as v1EspecialidadesRutas } from './router/v1/especialidadesRutas.js';
 
 const app = express();
 app.use(express.json());
@@ -11,11 +11,11 @@ await testConexion();
 
 // Ruta base de chequeo
 app.get('/', (req, res) => {
-  res.status(200).send({ estado: 'ok', ms: 'api ok' });
+  res.status(200).send({ estado: true, msg: 'API ok' });
 });
 
 // --- VINCULAR RUTAS MODULARES ---
-app.use('/especialidades', especialidadesRoutes);
+app.use('/api/v1/especialidades', v1EspecialidadesRutas);
 app.use('/obras-sociales', obrasSocialesRoutes);
 
 process.loadEnvFile();
