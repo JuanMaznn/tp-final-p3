@@ -9,7 +9,7 @@ export default class EspecialidadesControlador {
       const especialidades = await this.especialidades.buscarTodas();
       res.status(200).json({ estado: true, especialidades: especialidades });
     } catch (error) {
-      console.log(`Error en GET /especialidad ${error}`);
+      console.log(`Error en GET /especialidades ${error}`);
       res
         .status(500)
         .json({ estado: false, msg: 'Error al obtener especialidades' });
