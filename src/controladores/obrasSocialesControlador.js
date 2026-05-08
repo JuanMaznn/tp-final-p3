@@ -23,9 +23,9 @@ export default class ObrasSocialesControlador {
       if (obraSocial.length === 0) {
         return res
           .status(404)
-          .send({ estado: false, msg: 'Obra Social no encontrada' });
+          .json({ estado: false, msg: 'Obra Social no encontrada' });
       }
-      res.status(200).json({ estado: 'ok', obraSocial: obraSocial });
+      res.status(200).json({ estado: true, obraSocial: obraSocial });
     } catch (error) {
       console.log(`Error en GET /obras-sociales/:id ${error}`);
       res
@@ -48,12 +48,12 @@ export default class ObrasSocialesControlador {
 
       res.status(201).json({
         estado: true,
-        msg: `Obra social creada. ID ${result.insertId}`,
+        msg: `Obra Social creada. ID ${result.insertId}`,
       });
     } catch (error) {
       res
         .status(500)
-        .json({ estado: false, msg: 'Error al crear obra social' });
+        .json({ estado: false, msg: 'Error al crear Obra Social' });
     }
   };
 
@@ -67,7 +67,7 @@ export default class ObrasSocialesControlador {
       if (obraSocial.length === 0) {
         return res
           .status(404)
-          .json({ estado: false, msg: 'Obra social no encontrada' });
+          .json({ estado: false, msg: 'Obra Social no encontrada' });
       }
 
       const result = await this.obrasSociales.actualizar(id_obra_social, {
@@ -80,12 +80,12 @@ export default class ObrasSocialesControlador {
       if (result.affectedRows > 0) {
         return res
           .status(200)
-          .json({ estado: true, msg: 'Obra social modificada' });
+          .json({ estado: true, msg: 'Obra Social modificada' });
       }
     } catch (error) {
       res
         .status(500)
-        .json({ estado: false, msg: 'Error al editar obra social' });
+        .json({ estado: false, msg: 'Error al editar Obra Social' });
     }
   };
 
@@ -100,7 +100,7 @@ export default class ObrasSocialesControlador {
       }
       const result = await this.obrasSociales.eliminar(id_obra_social);
       if (result.affectedRows > 0) {
-        res.status(200).send({ estado: true, msg: 'Obra Social eliminada.' });
+        res.status(200).json({ estado: true, msg: 'Obra Social eliminada.' });
       }
     } catch (error) {
       res.status(500).json({ estado: false, msg: 'Error al eliminar' });

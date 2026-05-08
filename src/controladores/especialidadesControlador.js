@@ -24,9 +24,9 @@ export default class EspecialidadesControlador {
       if (especialidad.length === 0) {
         return res
           .status(404)
-          .send({ estado: false, msg: 'Especialidad no encontrada' });
+          .json({ estado: false, msg: 'Especialidad no encontrada' });
       }
-      res.status(200).json({ estado: 'ok', especialidad: especialidad });
+      res.status(200).json({ estado: true, especialidad: especialidad });
     } catch (error) {
       console.log(`Error en GET /especialidad/:id ${error}`);
       res
@@ -91,7 +91,7 @@ export default class EspecialidadesControlador {
       }
       const result = await this.especialidades.eliminar(id_especialidad);
       if (result.affectedRows > 0) {
-        res.status(200).send({ estado: true, msg: 'Especialidad eliminada.' });
+        res.status(200).json({ estado: true, msg: 'Especialidad eliminada.' });
       }
     } catch (error) {
       res.status(500).json({ estado: false, msg: 'Error al eliminar' });

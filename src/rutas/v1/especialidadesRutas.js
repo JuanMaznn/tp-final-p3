@@ -8,6 +8,7 @@ const router = express.Router();
 const especialidadesControlador = new EspecialidadesControlador();
 
 router.get('/', especialidadesControlador.buscarTodas);
+
 router.get(
   '/:id_especialidad',
   [
@@ -16,6 +17,7 @@ router.get(
   ],
   especialidadesControlador.buscarPorId,
 );
+
 router.post(
   '/',
   [
@@ -28,6 +30,7 @@ router.post(
   ],
   especialidadesControlador.crear,
 );
+
 router.put(
   '/:id_especialidad',
   [
@@ -41,6 +44,7 @@ router.put(
   ],
   especialidadesControlador.actualizar,
 );
+
 router.delete(
   '/:id_especialidad',
   [

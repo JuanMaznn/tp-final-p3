@@ -11,7 +11,7 @@ await testConexion();
 
 // Ruta base de chequeo
 app.get('/', (req, res) => {
-  res.status(200).send({ estado: true, msg: 'API ok' });
+  res.status(200).json({ estado: true, msg: 'API ok' });
 });
 
 // --- VINCULAR RUTAS MODULARES ---

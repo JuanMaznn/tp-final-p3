@@ -8,6 +8,7 @@ const router = express.Router();
 const obrasSocialesControlador = new ObrasSocialesControlador();
 
 router.get('/', obrasSocialesControlador.buscarTodas);
+
 router.get(
   '/:id_obra_social',
   [
@@ -16,6 +17,7 @@ router.get(
   ],
   obrasSocialesControlador.buscarPorId,
 );
+
 router.post(
   '/',
   [
@@ -28,7 +30,7 @@ router.post(
       .notEmpty()
       .withMessage('La descripción es obligatorio.')
       .isLength({ max: 255 })
-      .withMessage('El nombre no debe ser mayor a 120 caracteres.'),
+      .withMessage('El nombre no debe ser mayor a 255 caracteres.'),
     check('porcentajeDescuento')
       .notEmpty()
       .withMessage('El porcentaje de descuento es obligatorio.')
@@ -43,6 +45,7 @@ router.post(
   ],
   obrasSocialesControlador.crear,
 );
+
 router.put(
   '/:id_obra_social',
   [
@@ -56,7 +59,7 @@ router.put(
       .notEmpty()
       .withMessage('La descripción es obligatoria.')
       .isLength({ max: 255 })
-      .withMessage('La descripción no debe ser mayor a 120 caracteres.'),
+      .withMessage('La descripción no debe ser mayor a 255 caracteres.'),
     check('porcentajeDescuento')
       .notEmpty()
       .withMessage('El porcentaje de descuento es obligatorio.')
@@ -71,6 +74,7 @@ router.put(
   ],
   obrasSocialesControlador.actualizar,
 );
+
 router.delete(
   '/:id_obra_social',
   [
