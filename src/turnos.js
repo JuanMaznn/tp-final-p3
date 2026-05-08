@@ -1,7 +1,7 @@
 import express from 'express';
 import { testConexion } from './db/test.js';
-import { router as v1EspecialidadesRutas } from './router/v1/especialidadesRutas.js';
-import { router as v1ObrasSociales } from './router/v1/obrasSocialesRutas.js';
+import { router as v1EspecialidadesRutas } from './rutas/v1/especialidadesRutas.js';
+import { router as v1ObrasSociales } from './rutas/v1/obrasSocialesRutas.js';
 
 const app = express();
 app.use(express.json());

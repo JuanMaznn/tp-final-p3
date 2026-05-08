@@ -1,5 +1,5 @@
 import express from 'express';
-import EspecialidadesControlador from '../../controllers/especialidadesControlador.js';
+import EspecialidadesControlador from '../../controladores/especialidadesControlador.js';
 import { check, param } from 'express-validator';
 import { validarCampos } from '../../middlewares/validarCampos.js';
 

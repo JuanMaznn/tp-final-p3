@@ -1,5 +1,5 @@
 import express from 'express';
-import ObrasSocialesControlador from '../../controllers/obrasSocialesControlador.js';
+import ObrasSocialesControlador from '../../controladores/obrasSocialesControlador.js';
 import { check, param } from 'express-validator';
 import { validarCampos } from '../../middlewares/validarCampos.js';
 

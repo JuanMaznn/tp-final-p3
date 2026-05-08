@@ -1,4 +1,4 @@
-import ObrasSocialesServicio from '../service/obrasSocialesServicio.js';
+import ObrasSocialesServicio from '../servicios/obrasSocialesServicio.js';
 
 export default class ObrasSocialesControlador {
   constructor() {

@@ -1,4 +1,4 @@
-import EspecialidadesServicio from '../service/especialidadesServicio.js';
+import EspecialidadesServicio from '../servicios/especialidadesServicio.js';
 
 export default class EspecialidadesControlador {
   constructor() {
