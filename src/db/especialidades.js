@@ -6,7 +6,7 @@ export default class Especialidades {
     const [rows] = await pool.query(sql);
     return rows;
   };
-  // Siguiendo la lógica, agregarías los otros métodos
+  
   buscarPorId = async (id) => {
     const sql =
       'SELECT * FROM especialidades WHERE activo = 1 AND id_especialidad = ?';
