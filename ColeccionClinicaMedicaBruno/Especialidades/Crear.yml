@@ -1,0 +1,21 @@
+info:
+  name: Crear
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3000/api/v1/especialidades
+  body:
+    type: json
+    data: |-
+      {
+        "nombre": "Hemoterapia"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -74,7 +74,7 @@ router.put(
 router.delete(
   '/:id_obra_social',
   [
-    param('id_especialidad', 'El ID debe ser un número entero').isInt(),
+    param('id_obra_social', 'El ID debe ser un número entero').isInt(),
     validarCampos,
   ],
   obrasSocialesControlador.eliminar,
