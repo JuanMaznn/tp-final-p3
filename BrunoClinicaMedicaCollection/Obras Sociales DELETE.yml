@@ -1,0 +1,14 @@
+info:
+  name: Obras Sociales DELETE
+  type: http
+
+http:
+  method: DELETE
+  url: http://localhost:3000/obras-sociales/5
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
