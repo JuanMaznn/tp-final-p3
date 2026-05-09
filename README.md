@@ -1,18 +1,44 @@
 # Trabajo Practico Final Integrador
 
-## Comandos
-- npm install
+## Descripción
+Proyecto del trabajo practico final de la materia **Programación III**.
+El proyecto es una API desarrollada en **Node.js** usando el framework **Express.js** y utilizando el gestor de bases de datos **MySQL**.
 
-- node --watch index.js
-- npm run dev  (modo desarrollo)
-- npm start (ejecuta el backend)
-- npm run db (ejecuta el archivo 01_conectarMysql.js)
+## Instalación
+### Clonar el repositorio
+```sh
+git clone https://github.com/JuanMaznn/tp-final-p3.git
+```
 
-## .env
-PUERTO=3000
-DB_HOST='localhost'
-DB_DATABASE='prog3_turnos'
-DB_USER='prog3user'
-DB_PASSWORD=''"
+### Instalar dependencias
+```sh
+cd tp-final-p3
+npm install
+```
 
-- no usar el usuario root, mala practica.
+### Configurar variables de entorno
+Cambiar nombre `envexample` a `.env` y completar los datos.
+```env
+DB_USER=tu_usuario
+DB_PASSWORD=tu_password
+```
+
+### Ejecutar el servidor
+#### Modo Desarrollo
+```sh
+npm run dev
+```
+#### Modo Producción
+```sh
+npm start
+```
+
+## Integrantes
+- Leandro Martinez
+- Tamara Soledad Martinez
+- Lucas Ruiz
+- Matías Gabriel Terrera
+- Juan Manuel Zornn
+
+## Licencia
+Este proyecto está bajo la Licencia MIT. Puedes usarlo, modificarlo y distribuirlo libremente.

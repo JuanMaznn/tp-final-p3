@@ -1,18 +1,16 @@
 info:
-  name: put obras sociales id
+  name: Actualizar
   type: http
   seq: 1
 
 http:
   method: PUT
-  url: http://localhost:3000/obras-sociales/4
+  url: http://localhost:3000/api/v1/especialidades/10
   body:
     type: json
     data: |-
       {
-        "nombre": "OSUNER",
-        "descripcion": "OSU",
-        "porcentaje_descuento": 12.00
+        "nombre": "gastroenterología"
       }
   auth: inherit
 
@@ -21,4 +19,3 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
-​

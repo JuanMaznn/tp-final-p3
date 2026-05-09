@@ -1,16 +1,19 @@
 info:
-  name: especiladades
+  name: Crear
   type: http
   seq: 1
 
 http:
   method: POST
-  url: http://localhost:3000/especialidades
+  url: http://localhost:3000/api/v1/obras-sociales
   body:
     type: json
     data: |-
       {
-        "nombre": "ALERGIA E INMUNOLOGÍA"
+        "nombre": "ASD",
+        "descripcion": "asd descripcion",
+        "porcentajeDescuento": 10.0,
+        "esParticular": false
       }
   auth: inherit
 

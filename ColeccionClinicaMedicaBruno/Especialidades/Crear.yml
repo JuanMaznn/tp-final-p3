@@ -1,15 +1,16 @@
 info:
-  name: put especialidad
+  name: Crear
   type: http
+  seq: 1
 
 http:
-  method: PUT
-  url: http://localhost:3000/especialidades/10
+  method: POST
+  url: http://localhost:3000/api/v1/especialidades
   body:
     type: json
     data: |-
       {
-        "nombre": "nada"
+        "nombre": "Hemoterapia"
       }
   auth: inherit
 

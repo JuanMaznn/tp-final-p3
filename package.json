@@ -2,11 +2,11 @@
   "name": "tp-final-p3",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "turnos.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --watch index.js",
-    "start": "node index.js"
+    "dev": "node --watch src/turnos.js",
+    "start": "node src/turnos.js"
   },
   "repository": {
     "type": "git",
