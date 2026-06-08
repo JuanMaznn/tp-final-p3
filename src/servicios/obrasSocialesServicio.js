@@ -1,4 +1,3 @@
-import { pool } from '../db/conexion.js';
 import ObrasSociales from '../db/obrasSociales.js';
 
 export default class ObrasSocialesServicio {
@@ -10,19 +9,25 @@ export default class ObrasSocialesServicio {
     return this.obrasSociales.buscarTodas();
   };
 
-  buscarPorId = async (id) => {
-    return this.obrasSociales.buscarPorId(id);
+  buscarPorId = async (idObraSocial) => {
+    return this.obrasSociales.buscarPorId(idObraSocial);
   };
 
-  crear = async (datos) => {
-    return this.obrasSociales.crear(datos);
+  modificar = async (idObraSocial, obraSocial) => {
+    const existe = await this.obrasSociales.buscarPorId(idObraSocial);
+    if (existe.length === 0) return null;
+    await this.obrasSociales.actualizar(idObraSocial, obraSocial);
+    return this.buscarPorId(idObraSocial);
   };
 
-  actualizar = async (id, datos) => {
-    return this.obrasSociales.actualizar(id, datos);
+  crear = async (obraSocial) => {
+    const result = await this.obrasSociales.crear(obraSocial);
+    return this.buscarPorId(result.insertId);
   };
 
-  eliminar = async (id) => {
-    return this.obrasSociales.eliminar(id);
+  eliminar = async (idObraSocial) => {
+    const existe = await this.obrasSociales.buscarPorId(idObraSocial);
+    if (existe.length === 0) return null;
+    return this.obrasSociales.eliminar(idObraSocial);
   };
 }

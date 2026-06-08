@@ -1,0 +1,19 @@
+info:
+  name: turnos
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: http://localhost:3000/api/v1/turnos
+  body:
+    type: multipart-form
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c3VhcmlvIjoxLCJ1c3VhcmlvIjoiTWFyY2VsbyBMb3BleiIsInJvbCI6MSwiaWF0IjoxNzgwODU3MTkwLCJleHAiOjE3ODA4NjA3OTB9._pdJ9Kyv2HzJpcukN_FA6JdCF9twBRe3AILAF__scH8
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

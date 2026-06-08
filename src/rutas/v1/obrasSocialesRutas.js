@@ -2,6 +2,7 @@ import express from 'express';
 import ObrasSocialesControlador from '../../controladores/obrasSocialesControlador.js';
 import { check, param } from 'express-validator';
 import { validarCampos } from '../../middlewares/validarCampos.js';
+import autorizarUsuarios from '../../middlewares/autorizarUsuarios.js';
 
 const router = express.Router();
 
@@ -20,6 +21,7 @@ router.get(
 
 router.post(
   '/',
+  autorizarUsuarios([3]),
   [
     check('nombre')
       .notEmpty()
@@ -48,6 +50,7 @@ router.post(
 
 router.put(
   '/:id_obra_social',
+  autorizarUsuarios([3]),
   [
     param('id_obra_social', 'El ID debe ser un número entero').isInt(),
     check('nombre')
@@ -77,6 +80,7 @@ router.put(
 
 router.delete(
   '/:id_obra_social',
+  autorizarUsuarios([3]),
   [
     param('id_obra_social', 'El ID debe ser un número entero').isInt(),
     validarCampos,

@@ -18,10 +18,14 @@ export default class EspecialidadesServicio {
   };
 
   actualizar = async (id, nombre) => {
+    const existe = await this.especialidades.buscarPorId(id);
+    if (existe.length === 0) return null;
     return this.especialidades.actualizar(id, nombre);
   };
 
   eliminar = async (id) => {
+    const existe = await this.especialidades.buscarPorId(id);
+    if (existe.length === 0) return null;
     return this.especialidades.eliminar(id);
   };
 }
