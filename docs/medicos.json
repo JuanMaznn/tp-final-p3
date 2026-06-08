@@ -1,0 +1,25 @@
+{
+  "/api/v1/medicos": {
+    "get": {
+      "summary": "Lista todos los médicos (Paciente)",
+      "tags": ["Médicos"],
+      "security": [{ "bearerAuth": [] }],
+      "responses": {
+        "200": { "description": "Médicos encontrados" }
+      }
+    }
+  },
+  "/api/v1/medicos/especialidad/{id_especialidad}": {
+    "get": {
+      "summary": "Médicos por especialidad",
+      "tags": ["Médicos"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [{
+        "name": "id_especialidad", "in": "path", "required": true, "schema": { "type": "integer" }
+      }],
+      "responses": {
+        "200": { "description": "Médicos filtrados" }
+      }
+    }
+  }
+}

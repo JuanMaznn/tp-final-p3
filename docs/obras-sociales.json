@@ -1,0 +1,49 @@
+{
+  "/api/v1/obras-sociales": {
+    "get": {
+      "summary": "Lista todas las obras sociales activas",
+      "tags": ["Obras Sociales"],
+      "security": [{ "bearerAuth": [] }],
+      "responses": {
+        "200": { "description": "Obras sociales encontradas" }
+      }
+    },
+    "post": {
+      "summary": "Crea una obra social (Admin)",
+      "tags": ["Obras Sociales"],
+      "security": [{ "bearerAuth": [] }],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nombre": { "type": "string" },
+                "descripcion": { "type": "string" },
+                "porcentaje_descuento": { "type": "number" },
+                "es_particular": { "type": "integer" }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": { "description": "Obra social creada" }
+      }
+    }
+  },
+  "/api/v1/obras-sociales/{id}": {
+    "get": {
+      "summary": "Obtiene una obra social por ID",
+      "tags": ["Obras Sociales"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [{
+        "name": "id", "in": "path", "required": true, "schema": { "type": "integer" }
+      }],
+      "responses": {
+        "200": { "description": "Obra social encontrada" }
+      }
+    }
+  }
+}

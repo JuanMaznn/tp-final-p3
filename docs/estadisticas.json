@@ -1,0 +1,42 @@
+{
+  "/api/v1/estadisticas": {
+    "get": {
+      "summary": "Obtiene estadísticas de atenciones (Admin)",
+      "tags": ["Estadísticas"],
+      "security": [{ "bearerAuth": [] }],
+      "responses": {
+        "200": { "description": "Estadísticas obtenidas" }
+      }
+    }
+  },
+  "/api/v1/estadisticas/medico": {
+    "get": {
+      "summary": "Estadísticas del médico autenticado",
+      "tags": ["Estadísticas"],
+      "security": [{ "bearerAuth": [] }],
+      "responses": {
+        "200": { "description": "Estadísticas del médico" }
+      }
+    }
+  },
+  "/api/v1/estadisticas/pdf": {
+    "get": {
+      "summary": "Descarga PDF de estadísticas (Admin)",
+      "tags": ["Estadísticas"],
+      "security": [{ "bearerAuth": [] }],
+      "responses": {
+        "200": { "description": "PDF generado" }
+      }
+    }
+  },
+  "/api/v1/estadisticas/medico/pdf": {
+    "get": {
+      "summary": "Descarga PDF de estadísticas del médico",
+      "tags": ["Estadísticas"],
+      "security": [{ "bearerAuth": [] }],
+      "responses": {
+        "200": { "description": "PDF generado" }
+      }
+    }
+  }
+}

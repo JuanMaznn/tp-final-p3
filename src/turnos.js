@@ -7,15 +7,18 @@ import { router as v1MedicosRutas } from './rutas/v1/medicosRutas.js';
 import { router as v1AuthRutas } from './rutas/v1/authRutas.js';
 import { router as pacientesRutas } from './rutas/v1/pacientesRutas.js';
 import { router as v1EstadisticasRutas } from './rutas/v1/estadisticasRutas.js';
+import { swaggerUi, swaggerDocument } from './config/swagger.js';
+import cors from 'cors';
 import passport from 'passport';
-import swaggerUi from 'swagger-ui-express';
-import swaggerConfig from './config/swagger.js';
+import morgan from 'morgan';
 
 // IMPORTAMOS LA ESTRATEGIA A USAR Y LA FORMA DE VALIDAR.
 import { estrategia, validacion } from './config/passport.js';
 
 const app = express();
 app.use(express.json());
+app.use(cors());
+app.use(morgan('dev'));
 
 // CONFIGURACION PASSPORT
 passport.use(estrategia);
@@ -30,9 +33,10 @@ app.get('/', (req, res) => {
   res.status(200).json({ estado: true, msg: 'API ok' });
 });
 
+// --- SWAGGER ---
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 // --- VINCULAR RUTAS MODULARES ---
-import swaggerUi from 'swagger-ui-express';
-import swaggerConfig from './config/swagger.js';
 app.use(
   '/api/v1/especialidades',
   passport.authenticate('jwt', { session: false }),
