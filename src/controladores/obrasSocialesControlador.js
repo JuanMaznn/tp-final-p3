@@ -20,6 +20,7 @@ export default class ObrasSocialesControlador {
     try {
       const { id_obra_social } = req.params;
       const obraSocial = await this.obrasSociales.buscarPorId(id_obra_social);
+      
       if (obraSocial.length === 0) {
         return res
           .status(404)

@@ -13,6 +13,7 @@ export default class Especialidades {
     const [rows] = await pool.execute(sql, [id]);
     return rows;
   };
+  
   crear = async (nombre) => {
     const sql = 'INSERT INTO especialidades (nombre) VALUES (?)';
 

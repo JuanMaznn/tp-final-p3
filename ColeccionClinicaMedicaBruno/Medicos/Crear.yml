@@ -1,0 +1,24 @@
+info:
+  name: Crear
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3000/api/v1/medicos/1/obras-sociales
+  body:
+    type: json
+    data: |-
+      {
+          "obras_sociales": [
+              { "id_obra_social": 2 },
+              { "id_obra_social": 5 }
+          ]
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -19,14 +19,12 @@ export default class EspecialidadesControlador {
   buscarPorId = async (req, res) => {
     try {
       const { id_especialidad } = req.params;
-      const especialidad =
-        await this.especialidades.buscarPorId(id_especialidad);
-      if (especialidad.length === 0) {
-        return res
-          .status(404)
-          .json({ estado: false, msg: 'Especialidad no encontrada' });
-      }
-      res.status(200).json({ estado: true, especialidad: especialidad });
+      const especialidad = await this.especialidades.buscarPorId(id_especialidad);
+
+      res
+      .status(200)
+      .json({ estado: true, especialidad: especialidad });
+      
     } catch (error) {
       console.log(`Error en GET /especialidad/:id ${error}`);
       res
@@ -54,8 +52,7 @@ export default class EspecialidadesControlador {
       const { id_especialidad } = req.params;
       const { nombre } = req.body;
 
-      const especialidad =
-        await this.especialidades.buscarPorId(id_especialidad);
+      const especialidad = await this.especialidades.buscarPorId(id_especialidad);
       if (especialidad.length === 0) {
         return res
           .status(404)

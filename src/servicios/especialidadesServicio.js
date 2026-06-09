@@ -10,7 +10,14 @@ export default class EspecialidadesServicio {
   };
 
   buscarPorId = async (id) => {
-    return this.especialidades.buscarPorId(id);
+    const especialidad = await this.especialidades.buscarPorId(id);
+
+    if(!especialidad || especialidad.length === 0){
+      const error = new Error('La especialidad no se encontro')
+      error.status = 404;
+      throw error;
+    }
+    return especialidad[0];
   };
 
   crear = async (nombre) => {
@@ -18,10 +25,12 @@ export default class EspecialidadesServicio {
   };
 
   actualizar = async (id, nombre) => {
+    await this.buscarPorId(id);
     return this.especialidades.actualizar(id, nombre);
   };
 
   eliminar = async (id) => {
+    await this.buscarPorId(id);
     return this.especialidades.eliminar(id);
   };
 }

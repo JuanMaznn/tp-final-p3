@@ -2,6 +2,7 @@ import express from 'express';
 import { testConexion } from './db/test.js';
 import { router as v1EspecialidadesRutas } from './rutas/v1/especialidadesRutas.js';
 import { router as v1ObrasSociales } from './rutas/v1/obrasSocialesRutas.js';
+import { router as v1Medicos} from './rutas/v1/medicosRutas.js';
 
 const app = express();
 app.use(express.json());
@@ -17,6 +18,7 @@ app.get('/', (req, res) => {
 // --- VINCULAR RUTAS MODULARES ---
 app.use('/api/v1/especialidades', v1EspecialidadesRutas);
 app.use('/api/v1/obras-sociales', v1ObrasSociales);
+app.use('/api/v1/medicos', v1Medicos)
 
 process.loadEnvFile();
 const PUERTO = process.env.PUERTO || 3000;

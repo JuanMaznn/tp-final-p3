@@ -1,0 +1,24 @@
+info:
+  name: Actualizar
+  type: http
+  seq: 1
+
+http:
+  method: PUT
+  url: http://localhost:3000/api/v1/medicos/1
+  body:
+    type: json
+    data: |-
+      {
+        "id_especialidad": 1,
+        "matricula": 1000,
+        "descripcion": "Especialista Clinico Modificado",
+        "valor_consulta": 8750.50
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
