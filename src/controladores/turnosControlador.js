@@ -5,6 +5,24 @@ export default class TurnosControlador {
     this.turnos = new Turnos();
   }
 
+  buscarTodos = async (req, res) => {
+    try {
+      const turnos = await this.turnos.buscarTodos(req.user);
+
+      res.status(200).json({
+        estado: true,
+        mensaje: 'Turnos encontrados.',
+        turnos: turnos,
+      });
+    } catch (error) {
+      console.log(`Error en GET /turnos ${error}`);
+      res.status(500).json({
+        estado: false,
+        mensaje: 'Error interno',
+      });
+    }
+  };
+
   crear = async (req, res) => {
     try {
       const { id_medico, id_paciente, fecha_hora } = req.body;
@@ -34,23 +52,49 @@ export default class TurnosControlador {
     }
   };
 
-  buscarTodos = async (req, res) => {
+  buscarId = async (req, res) => {
     try {
-      const turnos = await this.turnos.buscarTodos(req.user);
-
-      res.status(200).json({
-        estado: true,
-        mensaje: 'Turnos encontrados.',
-        turnos: turnos,
-      });
+      const turno = await this.turnos.buscarPorId(
+        req.params.id_turno,
+        req.user,
+      );
+      if (!turno) {
+        res.status(404).json({ estado: false, mensaje: 'Turno no encontrado o no tienes acceso' });
+        return;
+      }
+      res.status(200).json({ estado: true, turno });
     } catch (error) {
-      console.log(`Error en GET /turnos ${error}`);
-      res.status(500).json({
-        estado: false,
-        mensaje: 'Error interno',
-      });
+      console.log(`Error en GET /turnos/id ${error}`);
+      res.status(500).json({ estado: false, mensaje: 'Error interno' });
     }
   };
+
+  modificar = async (req, res) => {
+    try {
+      const { id_medico, id_paciente, fecha_hora } = req.body;
+      const resultado = await this.turnos.modificar(req.params.id_turno, {
+        id_medico,
+        id_paciente,
+        fecha_hora,
+      });
+      if (!resultado) {
+        res
+          .status(404)
+          .json({
+            estado: false,
+            mensaje: 'Turno no encontrado o datos inválidos',
+          });
+        return;
+      }
+      res
+        .status(200)
+        .json({ estado: true, mensaje: 'Turno modificado', turno: resultado });
+    } catch (error) {
+      console.log(`Error en PUT /turnos/id ${error}`);
+      res.status(500).json({ estado: false, mensaje: 'Error interno' });
+    }
+  };
+
   marcarAtendido = async (req, res) => {
     try {
       const { id_turno } = req.params;

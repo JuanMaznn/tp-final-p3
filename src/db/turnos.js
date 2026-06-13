@@ -19,6 +19,25 @@ export default class TurnosReservas {
     return result.insertId;
   };
 
+  buscarPorId = async (idTurno) => {
+    const sql = 'SELECT * FROM turnos_reservas WHERE id_turno_reserva = ?';
+    const [rows] = await pool.execute(sql, [idTurno]);
+    return rows[0] || null;
+  };
+
+  modificar = async (idTurno, datos) => {
+    const { id_medico, id_paciente, fecha_hora, valor_total } = datos;
+    const sql = `UPDATE turnos_reservas SET id_medico = ?, id_paciente = ?, fecha_hora = ?, valor_total = ? WHERE id_turno_reserva = ?`;
+    const [result] = await pool.execute(sql, [
+      id_medico,
+      id_paciente,
+      fecha_hora,
+      valor_total,
+      idTurno,
+    ]);
+    return result.affectedRows > 0;
+  };
+
   marcarAtendido = async (idTurno) => {
     const sql =
       'UPDATE turnos_reservas SET atentido = 1 WHERE id_turno_reserva = ?';
@@ -31,6 +50,16 @@ export default class TurnosReservas {
       'SELECT * FROM turnos_reservas WHERE id_turno_reserva = ? AND id_medico = ?';
     const [rows] = await pool.execute(sql, [idTurno, idMedico]);
     return rows[0] || null;
+  };
+  buscarTodos = async () => {
+    const sql = `SELECT tr.id_turno_reserva, tr.fecha_hora, tr.valor_total, tr.atentido,
+                        vp.nombres AS paciente_nombres, vp.apellido AS paciente_apellido,
+                        vm.nombres AS medico_nombres, vm.apellido AS medico_apellido
+                    FROM turnos_reservas AS tr
+                    INNER JOIN v_pacientes AS vp ON tr.id_paciente = vp.id_paciente
+                    INNER JOIN v_medicos AS vm ON tr.id_medico = vm.id_medico;`;
+    const [turnos] = await pool.execute(sql);
+    return turnos;
   };
   turnosDeUnMedico = async (id_usuario) => {
     const sql = `SELECT tr.id_turno_reserva, tr.fecha_hora, tr.valor_total, tr.atentido,

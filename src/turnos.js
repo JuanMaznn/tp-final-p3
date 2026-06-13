@@ -7,10 +7,15 @@ import { router as v1MedicosRutas } from './rutas/v1/medicosRutas.js';
 import { router as v1AuthRutas } from './rutas/v1/authRutas.js';
 import { router as pacientesRutas } from './rutas/v1/pacientesRutas.js';
 import { router as v1EstadisticasRutas } from './rutas/v1/estadisticasRutas.js';
+import { router as v1UsuariosRutas } from './rutas/v1/usuariosRutas.js';
 import { swaggerUi, swaggerDocument } from './config/swagger.js';
 import cors from 'cors';
 import passport from 'passport';
 import morgan from 'morgan';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // IMPORTAMOS LA ESTRATEGIA A USAR Y LA FORMA DE VALIDAR.
 import { estrategia, validacion } from './config/passport.js';
@@ -19,6 +24,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // CONFIGURACION PASSPORT
 passport.use(estrategia);
@@ -67,6 +73,7 @@ app.use(
   passport.authenticate('jwt', { session: false }),
   v1EstadisticasRutas,
 );
+app.use('/api/v1/usuarios', v1UsuariosRutas);
 app.use('/api/v1/auth', v1AuthRutas);
 
 process.loadEnvFile();

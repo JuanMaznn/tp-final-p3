@@ -9,7 +9,7 @@ const router = express.Router();
 
 const turnosControlador = new TurnosControlador();
 
-router.get('/', autorizarUsuarios([1, 2]), turnosControlador.buscarTodos);
+router.get('/', autorizarUsuarios([1, 2, 3]), turnosControlador.buscarTodos);
 
 router.post(
   '/',
@@ -23,6 +23,29 @@ router.post(
     validarCampos,
   ],
   turnosControlador.crear,
+);
+
+router.get(
+  '/:id_turno',
+  autorizarUsuarios([1, 2, 3]),
+  [
+    param('id_turno').isInt().withMessage('id_turno debe ser entero.'),
+    validarCampos,
+  ],
+  turnosControlador.buscarId,
+);
+
+router.put(
+  '/:id_turno',
+  autorizarUsuarios([3]),
+  [
+    param('id_turno').isInt().withMessage('id_turno debe ser entero.'),
+    check('id_medico').notEmpty().withMessage('El id_medico es obligatorio.'),
+    check('id_paciente').notEmpty().withMessage('El id_paciente es obligatorio.'),
+    check('fecha_hora').notEmpty().withMessage('La fecha_hora es obligatorio.'),
+    validarCampos,
+  ],
+  turnosControlador.modificar,
 );
 
 router.put(

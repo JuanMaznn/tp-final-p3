@@ -4,8 +4,12 @@
       "summary": "Lista turnos del usuario autenticado",
       "tags": ["Turnos"],
       "security": [{ "bearerAuth": [] }],
+      "description": "Médico: ve sus turnos. Paciente: ve sus turnos. Admin: ve todos los turnos.",
       "responses": {
-        "200": { "description": "Turnos encontrados" }
+        "200": { "description": "Turnos encontrados. Admin recibe paciente_nombres, paciente_apellido, medico_nombres, medico_apellido." },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado" },
+        "500": { "description": "Error interno" }
       }
     },
     "post": {
@@ -28,7 +32,59 @@
         }
       },
       "responses": {
-        "201": { "description": "Turno creado" }
+        "201": { "description": "Turno creado" },
+        "400": { "description": "Faltan campos requeridos" },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado (solo paciente o admin)" },
+        "500": { "description": "Error interno" }
+      }
+    }
+  },
+  "/api/v1/turnos/{id_turno}": {
+    "get": {
+      "summary": "Obtiene un turno por ID",
+      "tags": ["Turnos"],
+      "security": [{ "bearerAuth": [] }],
+      "description": "Admin: cualquier turno. Médico/Paciente: solo turnos propios.",
+      "parameters": [{
+        "name": "id_turno", "in": "path", "required": true, "schema": { "type": "integer" }
+      }],
+      "responses": {
+        "200": { "description": "Turno encontrado" },
+        "404": { "description": "Turno no encontrado o no tienes acceso" },
+        "401": { "description": "No autorizado" },
+        "500": { "description": "Error interno" }
+      }
+    },
+    "put": {
+      "summary": "Modifica un turno (Admin)",
+      "tags": ["Turnos"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [{
+        "name": "id_turno", "in": "path", "required": true, "schema": { "type": "integer" }
+      }],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id_medico": { "type": "integer" },
+                "id_paciente": { "type": "integer" },
+                "fecha_hora": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": { "description": "Turno modificado. Se recalcula valor_total automáticamente." },
+        "400": { "description": "Faltan campos requeridos" },
+        "404": { "description": "Turno no encontrado o datos inválidos" },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado (solo admin)" },
+        "500": { "description": "Error interno" }
       }
     }
   },
@@ -41,7 +97,11 @@
         "name": "id_turno", "in": "path", "required": true, "schema": { "type": "integer" }
       }],
       "responses": {
-        "200": { "description": "Turno marcado como atendido" }
+        "200": { "description": "Turno marcado como atendido" },
+        "404": { "description": "Turno no encontrado o no te pertenece" },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado (solo médico)" },
+        "500": { "description": "Error interno" }
       }
     }
   }
