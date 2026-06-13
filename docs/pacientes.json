@@ -19,7 +19,12 @@
         }
       },
       "responses": {
-        "200": { "description": "Obra social asociada" }
+        "200": { "description": "Obra social asociada" },
+        "400": { "description": "Obra social no existe o está inactiva" },
+        "404": { "description": "Paciente no encontrado" },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado" },
+        "500": { "description": "Error interno" }
       }
     }
   }

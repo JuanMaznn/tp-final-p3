@@ -8,10 +8,11 @@ const router = express.Router();
 
 const obrasSocialesControlador = new ObrasSocialesControlador();
 
-router.get('/', obrasSocialesControlador.buscarTodas);
+router.get('/', autorizarUsuarios([1, 2, 3]), obrasSocialesControlador.buscarTodas);
 
 router.get(
   '/:id_obra_social',
+  autorizarUsuarios([1, 2, 3]),
   [
     param('id_obra_social', 'El ID debe ser un número entero').isInt(),
     validarCampos,

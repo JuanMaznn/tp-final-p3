@@ -7,7 +7,8 @@ export default class TurnosControlador {
 
   crear = async (req, res) => {
     try {
-      const turno = req.dto;
+      const { id_medico, id_paciente, fecha_hora } = req.body;
+      const turno = { id_medico, id_paciente, fecha_hora };
 
       const nuevoTurno = await this.turnos.crear(turno);
 
@@ -58,12 +59,10 @@ export default class TurnosControlador {
         req.user.id_usuario,
       );
       if (!result)
-        return res
-          .status(404)
-          .json({
-            estado: false,
-            mensaje: 'Turno no encontrado o no te pertenece',
-          });
+        return res.status(404).json({
+          estado: false,
+          mensaje: 'Turno no encontrado o no te pertenece',
+        });
       res
         .status(200)
         .json({ estado: true, mensaje: 'Turno marcado como atendido' });

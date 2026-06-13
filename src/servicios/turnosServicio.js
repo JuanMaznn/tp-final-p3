@@ -26,18 +26,19 @@ export default class TurnosServicio {
   };
 
   crear = async (turno) => {
-    const medico = await this.medicos.buscarPorId(turno.id_medico);
+    const medico = await this.medicos.buscarId(turno.id_medico);
 
     const paciente = await this.pacientes.buscarPorId(turno.id_paciente);
 
-    const obra_social = await this.obrasSociales.buscarPorId(
-      paciente.id_obra_social,
-    );
-
     let valor = medico.valor_consulta;
 
-    if (obra_social[0].es_particular === 0) {
-      valor = valor - obra_social[0].porcentaje_descuento * valor;
+    if (paciente.id_obra_social) {
+      const obra_social = await this.obrasSociales.buscarPorId(
+        paciente.id_obra_social,
+      );
+      if (obra_social[0] && obra_social[0].es_particular === 0) {
+        valor = valor - obra_social[0].porcentaje_descuento * valor;
+      }
     }
 
     turno.valor_total = valor;

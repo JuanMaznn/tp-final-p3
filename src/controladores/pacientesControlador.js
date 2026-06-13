@@ -14,6 +14,11 @@ export default class PacientesControlador {
         id_obra_social,
       );
 
+      if (result?.error) {
+        res.status(400).json({ estado: false, mensaje: result.error });
+        return;
+      }
+
       if (result === null) {
         res
           .status(404)

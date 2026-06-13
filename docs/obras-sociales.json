@@ -5,7 +5,9 @@
       "tags": ["Obras Sociales"],
       "security": [{ "bearerAuth": [] }],
       "responses": {
-        "200": { "description": "Obras sociales encontradas" }
+        "200": { "description": "Obras sociales encontradas" },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado" }
       }
     },
     "post": {
@@ -21,28 +23,82 @@
               "properties": {
                 "nombre": { "type": "string" },
                 "descripcion": { "type": "string" },
-                "porcentaje_descuento": { "type": "number" },
-                "es_particular": { "type": "integer" }
-              }
+                "porcentajeDescuento": { "type": "number" },
+                "esParticular": { "type": "boolean" }
+              },
+              "required": ["nombre", "descripcion", "porcentajeDescuento", "esParticular"]
             }
           }
         }
       },
       "responses": {
-        "201": { "description": "Obra social creada" }
+        "201": { "description": "Obra social creada" },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado" },
+        "500": { "description": "Error interno" }
       }
     }
   },
-  "/api/v1/obras-sociales/{id}": {
+  "/api/v1/obras-sociales/{id_obra_social}": {
     "get": {
       "summary": "Obtiene una obra social por ID",
       "tags": ["Obras Sociales"],
       "security": [{ "bearerAuth": [] }],
       "parameters": [{
-        "name": "id", "in": "path", "required": true, "schema": { "type": "integer" }
+        "name": "id_obra_social", "in": "path", "required": true, "schema": { "type": "integer" }
       }],
       "responses": {
-        "200": { "description": "Obra social encontrada" }
+        "200": { "description": "Obra social encontrada" },
+        "404": { "description": "Obra social no encontrada" },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado" }
+      }
+    },
+    "put": {
+      "summary": "Actualiza una obra social (Admin)",
+      "tags": ["Obras Sociales"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [{
+        "name": "id_obra_social", "in": "path", "required": true, "schema": { "type": "integer" }
+      }],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nombre": { "type": "string" },
+                "descripcion": { "type": "string" },
+                "porcentajeDescuento": { "type": "number" },
+                "esParticular": { "type": "boolean" }
+              },
+              "required": ["nombre", "descripcion", "porcentajeDescuento", "esParticular"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": { "description": "Obra social actualizada" },
+        "404": { "description": "Obra social no encontrada" },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado" },
+        "500": { "description": "Error interno" }
+      }
+    },
+    "delete": {
+      "summary": "Elimina (desactiva) una obra social (Admin)",
+      "tags": ["Obras Sociales"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [{
+        "name": "id_obra_social", "in": "path", "required": true, "schema": { "type": "integer" }
+      }],
+      "responses": {
+        "200": { "description": "Obra social eliminada" },
+        "404": { "description": "Obra social no encontrada" },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado" },
+        "500": { "description": "Error interno" }
       }
     }
   }

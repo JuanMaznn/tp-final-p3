@@ -83,16 +83,12 @@ export default class ObrasSocialesControlador {
   eliminar = async (req, res) => {
     try {
       const { id_obra_social } = req.params;
-      const obraSocial = await this.obrasSociales.buscarPorId(id_obra_social);
-      if (obraSocial.length === 0) {
+      const result = await this.obrasSociales.eliminar(id_obra_social);
+      if (!result)
         return res
           .status(404)
           .json({ estado: false, msg: 'Obra Social no encontrada' });
-      }
-      const result = await this.obrasSociales.eliminar(id_obra_social);
-      if (result.affectedRows > 0) {
-        res.status(200).json({ estado: true, msg: 'Obra Social eliminada.' });
-      }
+      res.status(200).json({ estado: true, msg: 'Obra Social eliminada.' });
     } catch (error) {
       res.status(500).json({ estado: false, msg: 'Error al eliminar' });
     }

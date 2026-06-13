@@ -8,10 +8,11 @@ const router = express.Router();
 
 const especialidadesControlador = new EspecialidadesControlador();
 
-router.get('/', especialidadesControlador.buscarTodas);
+router.get('/', autorizarUsuarios([1, 2, 3]), especialidadesControlador.buscarTodas);
 
 router.get(
   '/:id_especialidad',
+  autorizarUsuarios([1, 2, 3]),
   [
     param('id_especialidad', 'El ID debe ser un número entero').isInt(),
     validarCampos,

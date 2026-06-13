@@ -1,7 +1,7 @@
 import { pool } from './conexion.js';
 
 export default class Medicos {
-  buscarTodos = async () => {
+  /* buscarTodos = async () => {
     const sql = 'SELECT * FROM v_medicos';
     const [medicos] = await pool.execute(sql);
     return medicos;
@@ -11,6 +11,61 @@ export default class Medicos {
     const sql = `SELECT * FROM medicos WHERE id_medico = ?`;
     const [medico] = await pool.execute(sql, [id_medico]);
     return medico[0];
+  };
+ */
+  buscarTodos = async () => {
+    const sql = 'SELECT * FROM v_medicos';
+    const [rows] = await pool.execute(sql);
+    return rows;
+  };
+
+  /* buscarId = async (id) => {
+    const sql = 'SELECT * FROM medicos WHERE id_medico = ?';
+    const [rows] = await pool.execute(sql, [id]);
+    return rows;
+  }; */
+
+  buscarId = async (id_medico) => {
+    const sql = `SELECT * FROM medicos WHERE id_medico = ?`;
+    const [medico] = await pool.execute(sql, [id_medico]);
+    return medico[0];
+  };
+
+  crear = async (datos) => {
+    const {
+      id_usuario,
+      id_especialidad,
+      matricula,
+      descripcion,
+      valor_consulta,
+    } = datos;
+    const sql =
+      'INSERT INTO medicos (id_usuario, id_especialidad, matricula, descripcion, valor_consulta) VALUES (?,?,?,?,?)';
+    const [result] = await pool.execute(sql, [
+      id_usuario,
+      id_especialidad,
+      matricula,
+      descripcion,
+      valor_consulta,
+    ]);
+    return result;
+  };
+
+  actualizar = async (id_medico, datos) => {
+    const sql =
+      'UPDATE medicos SET id_especialidad = ?, matricula = ?, descripcion = ?, valor_consulta = ? WHERE id_medico = ?';
+
+    const [result] = await pool.execute(sql, [
+      datos.id_especialidad,
+      datos.matricula,
+      datos.descripcion,
+      datos.valor_consulta,
+      id_medico,
+    ]);
+
+    console.log('resultado real', result);
+
+    return result.affectedRows > 0;
   };
 
   relacionarConObraSocial = async (id_medico, obras_sociales) => {
@@ -34,6 +89,7 @@ export default class Medicos {
       return false;
     }
   };
+
   actualizarEspecialidad = async (id_medico, id_especialidad) => {
     const sql = 'UPDATE medicos SET id_especialidad = ? WHERE id_medico = ?';
     const [result] = await pool.execute(sql, [id_especialidad, id_medico]);
@@ -43,7 +99,8 @@ export default class Medicos {
     const sql = `SELECT m.id_medico, u.apellido, u.nombres, u.email
                  FROM medicos m
                  INNER JOIN usuarios u ON u.id_usuario = m.id_usuario
-                 WHERE m.id_especialidad = ?`;
+                 WHERE m.id_especialidad = ?
+                   AND EXISTS (SELECT 1 FROM especialidades e WHERE e.id_especialidad = m.id_especialidad AND e.activo = 1)`;
     const [rows] = await pool.execute(sql, [id_especialidad]);
     return rows;
   };
