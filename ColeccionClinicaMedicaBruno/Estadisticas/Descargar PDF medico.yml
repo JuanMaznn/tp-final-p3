@@ -1,0 +1,15 @@
+info:
+  name: Descargar PDF medico
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: http://localhost:3000/api/v1/estadisticas/medico/pdf
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

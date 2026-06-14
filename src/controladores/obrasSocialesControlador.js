@@ -62,26 +62,17 @@ export default class ObrasSocialesControlador {
       const { id_obra_social } = req.params;
       const { nombre, descripcion, porcentajeDescuento, esParticular } =
         req.body;
-
-      const obraSocial = await this.obrasSociales.buscarPorId(id_obra_social);
-      if (obraSocial.length === 0) {
-        return res
-          .status(404)
-          .json({ estado: false, msg: 'Obra Social no encontrada' });
-      }
-
-      const result = await this.obrasSociales.actualizar(id_obra_social, {
+      const result = await this.obrasSociales.modificar(id_obra_social, {
         nombre,
         descripcion,
         porcentajeDescuento,
         esParticular,
       });
-
-      if (result.affectedRows > 0) {
+      if (!result)
         return res
-          .status(200)
-          .json({ estado: true, msg: 'Obra Social modificada' });
-      }
+          .status(404)
+          .json({ estado: false, msg: 'Obra Social no encontrada' });
+      res.status(200).json({ estado: true, msg: 'Obra Social modificada' });
     } catch (error) {
       res
         .status(500)
@@ -92,16 +83,12 @@ export default class ObrasSocialesControlador {
   eliminar = async (req, res) => {
     try {
       const { id_obra_social } = req.params;
-      const obraSocial = await this.obrasSociales.buscarPorId(id_obra_social);
-      if (obraSocial.length === 0) {
+      const result = await this.obrasSociales.eliminar(id_obra_social);
+      if (!result)
         return res
           .status(404)
           .json({ estado: false, msg: 'Obra Social no encontrada' });
-      }
-      const result = await this.obrasSociales.eliminar(id_obra_social);
-      if (result.affectedRows > 0) {
-        res.status(200).json({ estado: true, msg: 'Obra Social eliminada.' });
-      }
+      res.status(200).json({ estado: true, msg: 'Obra Social eliminada.' });
     } catch (error) {
       res.status(500).json({ estado: false, msg: 'Error al eliminar' });
     }

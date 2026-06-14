@@ -1,0 +1,135 @@
+{
+  "/api/v1/pacientes": {
+    "get": {
+      "summary": "Lista todos los pacientes",
+      "tags": ["Pacientes"],
+      "security": [{ "bearerAuth": [] }],
+      "responses": {
+        "200": {
+          "description": "Lista de pacientes",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "mensaje": { "type": "string", "example": "Pacientes encontrados." },
+                  "pacientes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id_paciente": { "type": "integer" },
+                        "id_usuario": { "type": "integer" },
+                        "apellido": { "type": "string" },
+                        "nombres": { "type": "string" },
+                        "email": { "type": "string" },
+                        "id_obra_social": { "type": "integer" },
+                        "descripcion_obra_social": { "type": "string" },
+                        "foto_path": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado (solo admin y medicos)" }
+      }
+    }
+  },
+  "/api/v1/pacientes/{id_paciente}": {
+    "get": {
+      "summary": "Obtiene un paciente por ID",
+      "tags": ["Pacientes"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "name": "id_paciente",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "integer" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Paciente encontrado",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "paciente": {
+                    "type": "object",
+                    "properties": {
+                      "id_paciente": { "type": "integer" },
+                      "id_usuario": { "type": "integer" },
+                      "id_obra_social": { "type": "integer" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": { "description": "id_paciente debe ser entero" },
+        "404": { "description": "Paciente no encontrado" },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado" }
+      }
+    }
+  },
+  "/api/v1/pacientes/{id_paciente}/obra-social": {
+    "put": {
+      "summary": "Asocia una obra social a un paciente (Admin)",
+      "tags": ["Pacientes"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "name": "id_paciente",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "integer" }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id_obra_social": { "type": "integer" }
+              },
+              "required": ["id_obra_social"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Obra social asociada correctamente",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "mensaje": { "type": "string", "example": "Obra social asociada correctamente." }
+                }
+              }
+            }
+          }
+        },
+        "400": { "description": "Error de validacion u obra social inexistente" },
+        "404": { "description": "Paciente no encontrado" },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado (solo admin)" },
+        "500": { "description": "Error interno" }
+      }
+    }
+  }
+}

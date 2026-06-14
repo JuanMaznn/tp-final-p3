@@ -1,0 +1,25 @@
+info:
+  name: Crear
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: http://localhost:3000/api/v1/medicos
+  body:
+    type: json
+    data: |-
+      {
+        "id_usuario": 2,
+        "id_especialidad": 1,
+        "matricula": "12345",
+        "descripcion": "Médico de prueba",
+        "valor_consulta": 5000
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

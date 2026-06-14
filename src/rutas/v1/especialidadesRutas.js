@@ -2,15 +2,17 @@ import express from 'express';
 import EspecialidadesControlador from '../../controladores/especialidadesControlador.js';
 import { check, param } from 'express-validator';
 import { validarCampos } from '../../middlewares/validarCampos.js';
+import autorizarUsuarios from '../../middlewares/autorizarUsuarios.js';
 
 const router = express.Router();
 
 const especialidadesControlador = new EspecialidadesControlador();
 
-router.get('/', especialidadesControlador.buscarTodas);
+router.get('/', autorizarUsuarios([1, 2, 3]), especialidadesControlador.buscarTodas);
 
 router.get(
   '/:id_especialidad',
+  autorizarUsuarios([1, 2, 3]),
   [
     param('id_especialidad', 'El ID debe ser un número entero').isInt(),
     validarCampos,
@@ -20,6 +22,7 @@ router.get(
 
 router.post(
   '/',
+  autorizarUsuarios([3]),
   [
     check('nombre')
       .notEmpty()
@@ -33,6 +36,7 @@ router.post(
 
 router.put(
   '/:id_especialidad',
+  autorizarUsuarios([3]),
   [
     check('nombre')
       .notEmpty()
@@ -47,6 +51,7 @@ router.put(
 
 router.delete(
   '/:id_especialidad',
+  autorizarUsuarios([3]),
   [
     param('id_especialidad', 'El ID debe ser un número entero').isInt(),
     validarCampos,

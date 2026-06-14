@@ -53,25 +53,15 @@ export default class EspecialidadesControlador {
     try {
       const { id_especialidad } = req.params;
       const { nombre } = req.body;
-
-      const especialidad =
-        await this.especialidades.buscarPorId(id_especialidad);
-      if (especialidad.length === 0) {
-        return res
-          .status(404)
-          .json({ estado: false, msg: 'Especialidad no encontrada' });
-      }
-
       const result = await this.especialidades.actualizar(
         id_especialidad,
         nombre,
       );
-
-      if (result.affectedRows > 0) {
+      if (!result)
         return res
-          .status(200)
-          .json({ estado: true, msg: 'Especialidad modificada' });
-      }
+          .status(404)
+          .json({ estado: false, msg: 'Especialidad no encontrada' });
+      res.status(200).json({ estado: true, msg: 'Especialidad modificada' });
     } catch (error) {
       res
         .status(500)
@@ -82,17 +72,12 @@ export default class EspecialidadesControlador {
   eliminar = async (req, res) => {
     try {
       const { id_especialidad } = req.params;
-      const especialidad =
-        await this.especialidades.buscarPorId(id_especialidad);
-      if (especialidad.length === 0) {
+      const result = await this.especialidades.eliminar(id_especialidad);
+      if (!result)
         return res
           .status(404)
           .json({ estado: false, msg: 'Especialidad no encontrada' });
-      }
-      const result = await this.especialidades.eliminar(id_especialidad);
-      if (result.affectedRows > 0) {
-        res.status(200).json({ estado: true, msg: 'Especialidad eliminada.' });
-      }
+      res.status(200).json({ estado: true, msg: 'Especialidad eliminada.' });
     } catch (error) {
       res.status(500).json({ estado: false, msg: 'Error al eliminar' });
     }
