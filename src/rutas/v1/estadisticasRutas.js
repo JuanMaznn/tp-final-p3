@@ -6,6 +6,7 @@ const router = express.Router();
 const estadisticasControlador = new EstadisticasControlador();
 
 router.get('/', autorizarUsuarios([3]), estadisticasControlador.obtener);
+
 router.get(
   '/medico',
   autorizarUsuarios([1]),

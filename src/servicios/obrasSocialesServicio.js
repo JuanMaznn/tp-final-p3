@@ -2,32 +2,32 @@ import ObrasSociales from '../db/obrasSociales.js';
 
 export default class ObrasSocialesServicio {
   constructor() {
-    this.obrasSociales = new ObrasSociales();
+    this.obras_sociales = new ObrasSociales();
   }
 
   buscarTodas = async () => {
-    return this.obrasSociales.buscarTodas();
+    return this.obras_sociales.buscarTodas();
   };
 
-  buscarPorId = async (idObraSocial) => {
-    return this.obrasSociales.buscarPorId(idObraSocial);
+  buscarPorId = async (id_obra_social) => {
+    return this.obras_sociales.buscarPorId(id_obra_social);
   };
 
-  modificar = async (idObraSocial, obraSocial) => {
-    const existe = await this.obrasSociales.buscarPorId(idObraSocial);
+  modificar = async (id_obra_social, obra_social) => {
+    const existe = await this.obras_sociales.buscarPorId(id_obra_social);
     if (existe.length === 0) return null;
-    await this.obrasSociales.actualizar(idObraSocial, obraSocial);
-    return this.buscarPorId(idObraSocial);
+    await this.obras_sociales.actualizar(id_obra_social, obra_social);
+    return this.buscarPorId(id_obra_social);
   };
 
-  crear = async (obraSocial) => {
-    const result = await this.obrasSociales.crear(obraSocial);
+  crear = async (obra_social) => {
+    const result = await this.obras_sociales.crear(obra_social);
     return this.buscarPorId(result.insertId);
   };
 
-  eliminar = async (idObraSocial) => {
-    const existe = await this.obrasSociales.buscarPorId(idObraSocial);
+  eliminar = async (id_obra_social) => {
+    const existe = await this.obras_sociales.buscarPorId(id_obra_social);
     if (existe.length === 0) return null;
-    return this.obrasSociales.eliminar(idObraSocial);
+    return this.obras_sociales.eliminar(id_obra_social);
   };
 }

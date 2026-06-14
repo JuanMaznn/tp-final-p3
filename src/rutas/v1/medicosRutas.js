@@ -30,7 +30,7 @@ router.get(
   medicosControlador.buscarPorEspecialidad,
 );
 
-/* router.post(
+/* router.put(
   '/:id_medico/obras-sociales',
   autorizarUsuarios([3]),
   [
@@ -55,7 +55,7 @@ router.get(
   medicosControlador.asociarMedicoObrasSociales,
 ); */
 
-router.post(
+router.put(
   '/:id_medico/obras-sociales',
   autorizarUsuarios([3]),
   [
@@ -65,10 +65,13 @@ router.post(
       .isInt()
       .withMessage('El id_medico debe ser un número entero.'),
     check('obras_sociales')
-      .isArray()
-      .withMessage('obras_sociales debe ser un array.')
       .notEmpty()
-      .withMessage('obras_sociales no puede estar vacío.'),
+      .withMessage(
+        'Debe enviar un array de obras sociales con el campo "obras_sociales"',
+      )
+      .bail()
+      .isArray({ min: 1 })
+      .withMessage('Debe enviar al menos una obra social'),
     check('obras_sociales.*.id_obra_social')
       .notEmpty()
       .withMessage('Cada obra social debe tener id_obra_social.')
@@ -79,37 +82,32 @@ router.post(
   medicosControlador.asociarMedicoObrasSociales,
 );
 
-router.post(
-  '/',
-  autorizarUsuarios([3]),
-  [
-    check('id_usuario').isInt().withMessage('id_usuario debe ser entero'),
-    check('id_especialidad')
-      .isInt()
-      .withMessage('id_especialidad debe ser entero'),
-    check('matricula').notEmpty().withMessage('Matricula no puede estar vacio'),
-    check('descripcion').notEmpty(),
-    check('valor_consulta')
-      .isNumeric()
-      .withMessage('valor_consulta debe ser numérico'),
-    validarCampos,
-  ],
-  medicosControlador.crear,
-);
-
 router.put(
   '/:id_medico',
   autorizarUsuarios([3]),
   [
     param('id_medico').isInt().withMessage('El id debe ser entero'),
     check('id_especialidad')
+      .notEmpty()
+      .withMessage('La especialidad es obligatoria')
+      .bail()
       .isInt()
-      .withMessage('La especialidad debe ser un numero'),
-    check('descripcion').notEmpty(),
-    check('matricula').notEmpty().withMessage('La matricula es obligatoria'),
+      .withMessage('La especialidad debe ser un número'),
+    check('descripcion')
+      .notEmpty()
+      .withMessage('La descripción es obligatoria'),
+    check('matricula')
+      .notEmpty()
+      .withMessage('La matrícula es obligatoria')
+      .bail()
+      .isInt()
+      .withMessage('La matrícula debe ser un número entero'),
     check('valor_consulta')
+      .notEmpty()
+      .withMessage('El valor de consulta es obligatorio')
+      .bail()
       .isNumeric()
-      .withMessage('El valor debe de ser un numero'),
+      .withMessage('El valor debe ser un número'),
     validarCampos,
   ],
   medicosControlador.actualizar,
@@ -122,8 +120,10 @@ router.put(
     param('id_medico').isInt().withMessage('id_medico debe ser entero.'),
     check('id_especialidad')
       .notEmpty()
+      .withMessage('id_especialidad es obligatorio')
+      .bail()
       .isInt()
-      .withMessage('id_especialidad es obligatorio y debe ser entero.'),
+      .withMessage('id_especialidad debe ser un número entero'),
     validarCampos,
   ],
   medicosControlador.asociarEspecialidad,

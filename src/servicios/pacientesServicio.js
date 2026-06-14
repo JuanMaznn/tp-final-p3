@@ -4,8 +4,12 @@ import ObrasSocialesServicio from './obrasSocialesServicio.js';
 export default class PacientesServicio {
   constructor() {
     this.pacientes = new Pacientes();
-    this.obrasSociales = new ObrasSocialesServicio();
+    this.obras_sociales = new ObrasSocialesServicio();
   }
+
+  buscarTodos = async () => {
+    return this.pacientes.buscarTodos();
+  };
 
   buscarPorId = (id_paciente) => {
     return this.pacientes.buscarPorId(id_paciente);
@@ -17,8 +21,8 @@ export default class PacientesServicio {
   asociarObraSocial = async (id_paciente, id_obra_social) => {
     const paciente = await this.pacientes.buscarPorId(id_paciente);
     if (!paciente) return null;
-    const os = await this.obrasSociales.buscarPorId(id_obra_social);
-    if (os.length === 0)
+    const obra_social = await this.obras_sociales.buscarPorId(id_obra_social);
+    if (obra_social.length === 0)
       return { error: 'La obra social no existe o está inactiva' };
     return this.pacientes.actualizarObraSocial(id_paciente, id_obra_social);
   };

@@ -5,7 +5,30 @@
       "tags": ["Especialidades"],
       "security": [{ "bearerAuth": [] }],
       "responses": {
-        "200": { "description": "Lista de especialidades" },
+        "200": {
+          "description": "Lista de especialidades",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "especialidades": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id_especialidad": { "type": "integer" },
+                        "nombre": { "type": "string" },
+                        "activo": { "type": "integer" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "401": { "description": "No autorizado" },
         "403": { "description": "Acceso denegado" }
       }
@@ -27,9 +50,29 @@
         }
       },
       "responses": {
-        "201": { "description": "Especialidad creada" },
+        "201": {
+          "description": "Especialidad creada",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "mensaje": { "type": "string", "example": "Creado" },
+                  "especialidad": {
+                    "type": "object",
+                    "properties": {
+                      "id_especialidad": { "type": "integer" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": { "description": "Error de validación: nombre obligatorio" },
         "401": { "description": "No autorizado" },
-        "403": { "description": "Acceso denegado" },
+        "403": { "description": "Acceso denegado (solo admin)" },
         "500": { "description": "Error interno" }
       }
     }
@@ -43,7 +86,30 @@
         "name": "id_especialidad", "in": "path", "required": true, "schema": { "type": "integer" }
       }],
       "responses": {
-        "200": { "description": "Especialidad encontrada" },
+        "200": {
+          "description": "Especialidad encontrada",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "especialidad": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id_especialidad": { "type": "integer" },
+                        "nombre": { "type": "string" },
+                        "activo": { "type": "integer" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "404": { "description": "Especialidad no encontrada" },
         "401": { "description": "No autorizado" },
         "403": { "description": "Acceso denegado" }
@@ -69,10 +135,24 @@
         }
       },
       "responses": {
-        "200": { "description": "Especialidad actualizada" },
+        "200": {
+          "description": "Especialidad actualizada",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "mensaje": { "type": "string", "example": "Especialidad actualizada" }
+                }
+              }
+            }
+          }
+        },
+        "400": { "description": "Error de validación: nombre obligatorio" },
         "404": { "description": "Especialidad no encontrada" },
         "401": { "description": "No autorizado" },
-        "403": { "description": "Acceso denegado" },
+        "403": { "description": "Acceso denegado (solo admin)" },
         "500": { "description": "Error interno" }
       }
     },
@@ -84,10 +164,23 @@
         "name": "id_especialidad", "in": "path", "required": true, "schema": { "type": "integer" }
       }],
       "responses": {
-        "200": { "description": "Especialidad eliminada" },
+        "200": {
+          "description": "Especialidad desactivada",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "mensaje": { "type": "string", "example": "Especialidad desactivada" }
+                }
+              }
+            }
+          }
+        },
         "404": { "description": "Especialidad no encontrada" },
         "401": { "description": "No autorizado" },
-        "403": { "description": "Acceso denegado" },
+        "403": { "description": "Acceso denegado (solo admin)" },
         "500": { "description": "Error interno" }
       }
     }

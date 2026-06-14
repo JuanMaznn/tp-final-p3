@@ -57,4 +57,31 @@ export default class UsuariosControlador {
       });
     }
   };
+
+  eliminar = async (req, res) => {
+    try {
+      const id_usuario = req.params.id_usuario;
+
+      const eliminado = await this.usuariosServicio.eliminar(id_usuario);
+
+      if (!eliminado) {
+        res.status(404).json({
+          estado: false,
+          mensaje: 'Usuario no encontrado.',
+        });
+        return;
+      }
+
+      res.status(200).json({
+        estado: true,
+        mensaje: 'Usuario desactivado.',
+      });
+    } catch (err) {
+      console.log('Error en DELETE /usuarios', err);
+      res.status(500).json({
+        estado: false,
+        mensaje: 'Error interno.',
+      });
+    }
+  };
 }

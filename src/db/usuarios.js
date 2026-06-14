@@ -2,7 +2,7 @@ import { pool } from './conexion.js';
 
 export default class Usuarios {
   buscarPorId = async (id_usuario) => {
-    const sql = `SELECT * FROM usuarios WHERE id_usuario = ?`;
+    const sql = `SELECT * FROM usuarios WHERE id_usuario = ? AND activo = 1`;
     const [usuario] = await pool.execute(sql, [id_usuario]);
     return usuario[0];
   };
@@ -23,12 +23,30 @@ export default class Usuarios {
     return rows[0] || null;
   };
 
+  buscarPorDocumento = async (documento) => {
+    const sql = 'SELECT id_usuario FROM usuarios WHERE documento = ?';
+    const [rows] = await pool.execute(sql, [documento]);
+    return rows[0] || null;
+  };
+
+  desactivar = async (id_usuario) => {
+    const sql = 'UPDATE usuarios SET activo = 0 WHERE id_usuario = ?';
+    await pool.execute(sql, [id_usuario]);
+  };
+
   crear = async (datos) => {
-    const { documento, apellido, nombres, email, contrasenia, rol, foto_path } = datos;
+    const { documento, apellido, nombres, email, contrasenia, rol, foto_path } =
+      datos;
     const sql = `INSERT INTO usuarios (documento, apellido, nombres, email, contrasenia, rol, foto_path, activo)
                  VALUES (?, ?, ?, ?, SHA2(?, 256), ?, ?, 1)`;
     const [result] = await pool.execute(sql, [
-      documento, apellido, nombres, email, contrasenia, rol, foto_path || '',
+      documento,
+      apellido,
+      nombres,
+      email,
+      contrasenia,
+      rol,
+      foto_path || '',
     ]);
     return result.insertId || null;
   };
@@ -37,11 +55,18 @@ export default class Usuarios {
     const { id_especialidad, matricula, descripcion, valor_consulta } = datos;
     const sql = `INSERT INTO medicos (id_usuario, id_especialidad, matricula, descripcion, valor_consulta)
                  VALUES (?, ?, ?, ?, ?)`;
-    await pool.execute(sql, [id_usuario, id_especialidad, matricula, descripcion || '', valor_consulta]);
+    await pool.execute(sql, [
+      id_usuario,
+      id_especialidad,
+      matricula,
+      descripcion || '',
+      valor_consulta,
+    ]);
   };
 
   crearPaciente = async (id_usuario, id_obra_social) => {
-    const sql = 'INSERT INTO pacientes (id_usuario, id_obra_social) VALUES (?, ?)';
+    const sql =
+      'INSERT INTO pacientes (id_usuario, id_obra_social) VALUES (?, ?)';
     await pool.execute(sql, [id_usuario, id_obra_social]);
   };
 

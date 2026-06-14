@@ -41,7 +41,9 @@ router.put(
   [
     param('id_turno').isInt().withMessage('id_turno debe ser entero.'),
     check('id_medico').notEmpty().withMessage('El id_medico es obligatorio.'),
-    check('id_paciente').notEmpty().withMessage('El id_paciente es obligatorio.'),
+    check('id_paciente')
+      .notEmpty()
+      .withMessage('El id_paciente es obligatorio.'),
     check('fecha_hora').notEmpty().withMessage('La fecha_hora es obligatorio.'),
     validarCampos,
   ],

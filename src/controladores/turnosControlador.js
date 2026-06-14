@@ -30,11 +30,16 @@ export default class TurnosControlador {
 
       const nuevoTurno = await this.turnos.crear(turno);
 
-      if (!nuevoTurno || nuevoTurno.length === 0) {
+      if (!nuevoTurno) {
         res.status(400).json({
           estado: false,
           mensaje: 'No se pudo crear el turno.',
         });
+        return;
+      }
+
+      if (nuevoTurno.error) {
+        res.status(400).json({ estado: false, mensaje: nuevoTurno.error });
         return;
       }
 

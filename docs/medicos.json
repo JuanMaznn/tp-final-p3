@@ -5,39 +5,37 @@
       "tags": ["Médicos"],
       "security": [{ "bearerAuth": [] }],
       "responses": {
-        "200": { "description": "Lista de médicos" },
-        "401": { "description": "No autorizado" },
-        "403": { "description": "Acceso denegado" }
-      }
-    },
-    "post": {
-      "summary": "Crea un nuevo médico (Admin)",
-      "tags": ["Médicos"],
-      "security": [{ "bearerAuth": [] }],
-      "requestBody": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id_usuario": { "type": "integer" },
-                "id_especialidad": { "type": "integer" },
-                "matricula": { "type": "string" },
-                "descripcion": { "type": "string" },
-                "valor_consulta": { "type": "number" }
-              },
-              "required": ["id_usuario", "id_especialidad", "matricula", "descripcion", "valor_consulta"]
+        "200": {
+          "description": "Lista de médicos",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "mensaje": { "type": "string", "example": "Médicos encontrados." },
+                  "medicos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id_medico": { "type": "integer" },
+                        "id_usuario": { "type": "integer" },
+                        "apellido": { "type": "string" },
+                        "nombres": { "type": "string" },
+                        "email": { "type": "string" },
+                        "foto_path": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
-        }
-      },
-      "responses": {
-        "201": { "description": "Médico creado" },
-        "400": { "description": "Especialidad no existe o está inactiva" },
+        },
         "401": { "description": "No autorizado" },
-        "403": { "description": "Acceso denegado" },
-        "500": { "description": "Error interno" }
+        "403": { "description": "Acceso denegado"
+        }
       }
     }
   },
@@ -50,10 +48,34 @@
         "name": "id_medico", "in": "path", "required": true, "schema": { "type": "integer" }
       }],
       "responses": {
-        "200": { "description": "Médico encontrado" },
+        "200": {
+          "description": "Médico encontrado",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "medico": {
+                    "type": "object",
+                    "properties": {
+                      "id_medico": { "type": "integer" },
+                      "id_usuario": { "type": "integer" },
+                      "id_especialidad": { "type": "integer" },
+                      "matricula": { "type": "integer" },
+                      "descripcion": { "type": "string" },
+                      "valor_consulta": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "404": { "description": "Médico no encontrado" },
         "401": { "description": "No autorizado" },
-        "403": { "description": "Acceso denegado" }
+        "403": { "description": "Acceso denegado"
+        }
       }
     },
     "put": {
@@ -71,7 +93,7 @@
               "type": "object",
               "properties": {
                 "id_especialidad": { "type": "integer" },
-                "matricula": { "type": "string" },
+                "matricula": { "type": "integer" },
                 "descripcion": { "type": "string" },
                 "valor_consulta": { "type": "number" }
               },
@@ -81,11 +103,24 @@
         }
       },
       "responses": {
-        "200": { "description": "Médico actualizado" },
-        "400": { "description": "Especialidad no existe o está inactiva" },
+        "200": {
+          "description": "Médico actualizado",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "msg": { "type": "string", "example": "Medico modificado" }
+                }
+              }
+            }
+          }
+        },
+        "400": { "description": "Error de validación: campos obligatorios / Especialidad no existe o está inactiva" },
         "404": { "description": "Médico no encontrado" },
         "401": { "description": "No autorizado" },
-        "403": { "description": "Acceso denegado" },
+        "403": { "description": "Acceso denegado (solo admin)" },
         "500": { "description": "Error interno" }
       }
     }
@@ -99,10 +134,35 @@
         "name": "id_especialidad", "in": "path", "required": true, "schema": { "type": "integer" }
       }],
       "responses": {
-        "200": { "description": "Médicos filtrados por especialidad" },
+        "200": {
+          "description": "Médicos filtrados por especialidad",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "medicos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id_medico": { "type": "integer" },
+                        "apellido": { "type": "string" },
+                        "nombres": { "type": "string" },
+                        "email": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "404": { "description": "Especialidad no encontrada o inactiva" },
         "401": { "description": "No autorizado" },
-        "403": { "description": "Acceso denegado" }
+        "403": { "description": "Acceso denegado"
+        }
       }
     }
   },
@@ -129,17 +189,30 @@
         }
       },
       "responses": {
-        "200": { "description": "Especialidad asociada correctamente" },
-        "400": { "description": "Especialidad no existe o está inactiva" },
+        "200": {
+          "description": "Especialidad asociada correctamente",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "mensaje": { "type": "string", "example": "Especialidad asociada correctamente" }
+                }
+              }
+            }
+          }
+        },
+        "400": { "description": "Especialidad no existe o está inactiva / id_especialidad requerido" },
         "404": { "description": "Médico no encontrado" },
         "401": { "description": "No autorizado" },
-        "403": { "description": "Acceso denegado" },
+        "403": { "description": "Acceso denegado (solo admin)" },
         "500": { "description": "Error interno" }
       }
     }
   },
   "/api/v1/medicos/{id_medico}/obras-sociales": {
-    "post": {
+    "put": {
       "summary": "Asocia obras sociales a un médico (Admin)",
       "tags": ["Médicos"],
       "security": [{ "bearerAuth": [] }],
@@ -169,11 +242,24 @@
         }
       },
       "responses": {
-        "201": { "description": "Obras sociales relacionadas" },
-        "400": { "description": "Obra social no existe o está inactiva / No se crearon las relaciones" },
+        "200": {
+          "description": "Obras sociales asociadas correctamente",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "mensaje": { "type": "string", "example": "Obras sociales asociadas correctamente" }
+                }
+              }
+            }
+          }
+        },
+        "400": { "description": "Obra social no existe o está inactiva / No se crearon las relaciones / obras_sociales requerido" },
         "404": { "description": "Médico no encontrado" },
         "401": { "description": "No autorizado" },
-        "403": { "description": "Acceso denegado" },
+        "403": { "description": "Acceso denegado (solo admin)" },
         "500": { "description": "Error interno" }
       }
     }

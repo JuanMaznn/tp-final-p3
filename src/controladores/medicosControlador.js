@@ -44,70 +44,7 @@ export default class MedicosControlador {
       });
     }
   };
-  crear = async (req, res) => {
-    try {
-      const {
-        id_usuario,
-        id_especialidad,
-        matricula,
-        descripcion,
-        valor_consulta,
-      } = req.body;
 
-      const result = await this.medicos.crear({
-        id_usuario,
-        id_especialidad,
-        matricula,
-        descripcion,
-        valor_consulta,
-      });
-
-      if (result?.error) {
-        return res.status(400).json({ estado: false, msg: result.error });
-      }
-
-      res.status(201).json({
-        estado: true,
-        msg: `Medico creado `,
-      });
-    } catch (error) {
-      console.log(`error al crear el medico ${error}`);
-
-      res.status(500).json({
-        estado: false,
-        msg: 'Error al crear el medico',
-      });
-    }
-  };
-
-  /*  asociarMedicoObrasSociales = async (req, res) => {
-    try {
-      const { id_medico, obras_sociales } = req.dto;
-
-      const relacion = await this.medicos.asociarMedicoObrasSociales(
-        id_medico,
-        obras_sociales,
-      );
-
-      if (!relacion) {
-        return res.status(400).json({
-          estado: false,
-          mensaje: 'No se crearon las relaciones',
-        });
-      }
-
-      return res.status(201).json({
-        estado: 'ok',
-        mensaje: 'Médico y obras sociales relacionadas',
-      });
-    } catch (error) {
-      console.log(`Error en POST /medicos/obras-sociales ${error}`);
-      res.status(500).json({
-        estado: false,
-        mensaje: 'Error interno.',
-      });
-    }
-  }; */
   asociarMedicoObrasSociales = async (req, res) => {
     try {
       const { id_medico } = req.params;
@@ -136,12 +73,12 @@ export default class MedicosControlador {
         });
       }
 
-      return res.status(201).json({
-        estado: 'ok',
-        mensaje: 'Médico y obras sociales relacionadas',
+      return res.status(200).json({
+        estado: true,
+        mensaje: 'Obras sociales asociadas correctamente',
       });
     } catch (error) {
-      console.log(`Error en POST /medicos/obras-sociales ${error}`);
+      console.log(`Error en PUT /medicos/obras-sociales ${error}`);
       res.status(500).json({
         estado: false,
         mensaje: 'Error interno.',
@@ -202,9 +139,7 @@ export default class MedicosControlador {
         id_especialidad,
       );
       if (result?.error)
-        return res
-          .status(400)
-          .json({ estado: false, mensaje: result.error });
+        return res.status(400).json({ estado: false, mensaje: result.error });
       if (result === null)
         return res
           .status(404)

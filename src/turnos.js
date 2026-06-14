@@ -17,14 +17,20 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// IMPORTAMOS LA ESTRATEGIA A USAR Y LA FORMA DE VALIDAR.
+// estrategias
 import { estrategia, validacion } from './config/passport.js';
 
 const app = express();
 app.use(express.json());
+
+// CORS
 app.use(cors());
+
+// morgan
 app.use(morgan('dev'));
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// ruta de uploads
+app.use('/uploads', express.static(path.join(__dirname, './publico')));
 
 // CONFIGURACION PASSPORT
 passport.use(estrategia);
@@ -39,10 +45,10 @@ app.get('/', (req, res) => {
   res.status(200).json({ estado: true, msg: 'API ok' });
 });
 
-// --- SWAGGER ---
+// SWAGGER
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// --- VINCULAR RUTAS MODULARES ---
+// VINCULAR RUTAS MODULARES / usar passport acá
 app.use(
   '/api/v1/especialidades',
   passport.authenticate('jwt', { session: false }),
@@ -73,7 +79,11 @@ app.use(
   passport.authenticate('jwt', { session: false }),
   v1EstadisticasRutas,
 );
-app.use('/api/v1/usuarios', v1UsuariosRutas);
+app.use(
+  '/api/v1/usuarios',
+  passport.authenticate('jwt', { session: false }),
+  v1UsuariosRutas,
+);
 app.use('/api/v1/auth', v1AuthRutas);
 
 process.loadEnvFile();

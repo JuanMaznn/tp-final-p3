@@ -1,54 +1,16 @@
 import { pool } from './conexion.js';
 
 export default class Medicos {
-  /* buscarTodos = async () => {
-    const sql = 'SELECT * FROM v_medicos';
-    const [medicos] = await pool.execute(sql);
-    return medicos;
-  };
-
-  buscarPorId = async (id_medico) => {
-    const sql = `SELECT * FROM medicos WHERE id_medico = ?`;
-    const [medico] = await pool.execute(sql, [id_medico]);
-    return medico[0];
-  };
- */
   buscarTodos = async () => {
     const sql = 'SELECT * FROM v_medicos';
     const [rows] = await pool.execute(sql);
     return rows;
   };
 
-  /* buscarId = async (id) => {
-    const sql = 'SELECT * FROM medicos WHERE id_medico = ?';
-    const [rows] = await pool.execute(sql, [id]);
-    return rows;
-  }; */
-
   buscarId = async (id_medico) => {
     const sql = `SELECT * FROM medicos WHERE id_medico = ?`;
     const [medico] = await pool.execute(sql, [id_medico]);
     return medico[0];
-  };
-
-  crear = async (datos) => {
-    const {
-      id_usuario,
-      id_especialidad,
-      matricula,
-      descripcion,
-      valor_consulta,
-    } = datos;
-    const sql =
-      'INSERT INTO medicos (id_usuario, id_especialidad, matricula, descripcion, valor_consulta) VALUES (?,?,?,?,?)';
-    const [result] = await pool.execute(sql, [
-      id_usuario,
-      id_especialidad,
-      matricula,
-      descripcion,
-      valor_consulta,
-    ]);
-    return result;
   };
 
   actualizar = async (id_medico, datos) => {
@@ -95,6 +57,7 @@ export default class Medicos {
     const [result] = await pool.execute(sql, [id_especialidad, id_medico]);
     return result.affectedRows > 0;
   };
+
   buscarPorEspecialidad = async (id_especialidad) => {
     const sql = `SELECT m.id_medico, u.apellido, u.nombres, u.email
                  FROM medicos m

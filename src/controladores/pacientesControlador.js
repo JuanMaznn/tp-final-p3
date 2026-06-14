@@ -5,6 +5,45 @@ export default class PacientesControlador {
     this.pacientes = new PacientesServicio();
   }
 
+  buscarTodos = async (req, res) => {
+    try {
+      const pacientes = await this.pacientes.buscarTodos();
+      res.status(200).json({
+        estado: true,
+        mensaje: 'Pacientes encontrados.',
+        pacientes,
+      });
+    } catch (error) {
+      console.log(`Error en GET /pacientes ${error}`);
+      res.status(500).json({
+        estado: false,
+        mensaje: 'Error al obtener pacientes',
+      });
+    }
+  };
+
+  buscarPorId = async (req, res) => {
+    try {
+      const { id_paciente } = req.params;
+      const paciente = await this.pacientes.buscarPorId(id_paciente);
+      if (!paciente) {
+        return res
+          .status(404)
+          .json({ estado: false, msg: 'Paciente no encontrado' });
+      }
+      res.status(200).json({
+        estado: true,
+        paciente,
+      });
+    } catch (error) {
+      console.log(`Error en GET /pacientes/:id ${error}`);
+      res.status(500).json({
+        estado: false,
+        msg: 'Error al obtener el paciente',
+      });
+    }
+  };
+
   asociarObraSocial = async (req, res) => {
     try {
       const { id_paciente } = req.params;
