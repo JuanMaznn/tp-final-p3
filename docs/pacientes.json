@@ -36,7 +36,7 @@
           }
         },
         "401": { "description": "No autorizado" },
-        "403": { "description": "Acceso denegado (solo admin y médicos)" }
+        "403": { "description": "Acceso denegado (solo admin y medicos)" }
       }
     }
   },
@@ -45,9 +45,14 @@
       "summary": "Obtiene un paciente por ID",
       "tags": ["Pacientes"],
       "security": [{ "bearerAuth": [] }],
-      "parameters": [{
-        "name": "id_paciente", "in": "path", "required": true, "schema": { "type": "integer" }
-      }],
+      "parameters": [
+        {
+          "name": "id_paciente",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "integer" }
+        }
+      ],
       "responses": {
         "200": {
           "description": "Paciente encontrado",
@@ -70,18 +75,26 @@
             }
           }
         },
+        "400": { "description": "id_paciente debe ser entero" },
         "404": { "description": "Paciente no encontrado" },
         "401": { "description": "No autorizado" },
         "403": { "description": "Acceso denegado" }
       }
-    },
+    }
+  },
+  "/api/v1/pacientes/{id_paciente}/obra-social": {
     "put": {
       "summary": "Asocia una obra social a un paciente (Admin)",
       "tags": ["Pacientes"],
       "security": [{ "bearerAuth": [] }],
-      "parameters": [{
-        "name": "id_paciente", "in": "path", "required": true, "schema": { "type": "integer" }
-      }],
+      "parameters": [
+        {
+          "name": "id_paciente",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "integer" }
+        }
+      ],
       "requestBody": {
         "required": true,
         "content": {
@@ -111,7 +124,7 @@
             }
           }
         },
-        "400": { "description": "Error de validación / Obra social no existe o está inactiva" },
+        "400": { "description": "Error de validacion u obra social inexistente" },
         "404": { "description": "Paciente no encontrado" },
         "401": { "description": "No autorizado" },
         "403": { "description": "Acceso denegado (solo admin)" },

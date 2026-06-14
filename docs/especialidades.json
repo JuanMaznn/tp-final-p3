@@ -58,19 +58,13 @@
                 "type": "object",
                 "properties": {
                   "estado": { "type": "boolean", "example": true },
-                  "mensaje": { "type": "string", "example": "Creado" },
-                  "especialidad": {
-                    "type": "object",
-                    "properties": {
-                      "id_especialidad": { "type": "integer" }
-                    }
-                  }
+                  "msg": { "type": "string", "example": "ID Creado 16" }
                 }
               }
             }
           }
         },
-        "400": { "description": "Error de validación: nombre obligatorio" },
+        "400": { "description": "Error de validacion: nombre obligatorio" },
         "401": { "description": "No autorizado" },
         "403": { "description": "Acceso denegado (solo admin)" },
         "500": { "description": "Error interno" }
@@ -82,9 +76,14 @@
       "summary": "Obtiene una especialidad por ID",
       "tags": ["Especialidades"],
       "security": [{ "bearerAuth": [] }],
-      "parameters": [{
-        "name": "id_especialidad", "in": "path", "required": true, "schema": { "type": "integer" }
-      }],
+      "parameters": [
+        {
+          "name": "id_especialidad",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "integer" }
+        }
+      ],
       "responses": {
         "200": {
           "description": "Especialidad encontrada",
@@ -110,6 +109,7 @@
             }
           }
         },
+        "400": { "description": "id_especialidad debe ser entero" },
         "404": { "description": "Especialidad no encontrada" },
         "401": { "description": "No autorizado" },
         "403": { "description": "Acceso denegado" }
@@ -119,9 +119,14 @@
       "summary": "Actualiza una especialidad (Admin)",
       "tags": ["Especialidades"],
       "security": [{ "bearerAuth": [] }],
-      "parameters": [{
-        "name": "id_especialidad", "in": "path", "required": true, "schema": { "type": "integer" }
-      }],
+      "parameters": [
+        {
+          "name": "id_especialidad",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "integer" }
+        }
+      ],
       "requestBody": {
         "required": true,
         "content": {
@@ -143,13 +148,13 @@
                 "type": "object",
                 "properties": {
                   "estado": { "type": "boolean", "example": true },
-                  "mensaje": { "type": "string", "example": "Especialidad actualizada" }
+                  "msg": { "type": "string", "example": "Especialidad modificada" }
                 }
               }
             }
           }
         },
-        "400": { "description": "Error de validación: nombre obligatorio" },
+        "400": { "description": "Error de validacion" },
         "404": { "description": "Especialidad no encontrada" },
         "401": { "description": "No autorizado" },
         "403": { "description": "Acceso denegado (solo admin)" },
@@ -157,22 +162,27 @@
       }
     },
     "delete": {
-      "summary": "Elimina (desactiva) una especialidad (Admin)",
+      "summary": "Elimina una especialidad (Admin)",
       "tags": ["Especialidades"],
       "security": [{ "bearerAuth": [] }],
-      "parameters": [{
-        "name": "id_especialidad", "in": "path", "required": true, "schema": { "type": "integer" }
-      }],
+      "parameters": [
+        {
+          "name": "id_especialidad",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "integer" }
+        }
+      ],
       "responses": {
         "200": {
-          "description": "Especialidad desactivada",
+          "description": "Especialidad eliminada",
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
                   "estado": { "type": "boolean", "example": true },
-                  "mensaje": { "type": "string", "example": "Especialidad desactivada" }
+                  "msg": { "type": "string", "example": "Especialidad eliminada." }
                 }
               }
             }
