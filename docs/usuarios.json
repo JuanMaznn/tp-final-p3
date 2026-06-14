@@ -1,8 +1,9 @@
 {
   "/api/v1/usuarios": {
     "post": {
-      "summary": "Registra un nuevo usuario (paciente, médico o administrador)",
+      "summary": "Registra un nuevo usuario (paciente, medico o administrador)",
       "tags": ["Usuarios"],
+      "security": [{ "bearerAuth": [] }],
       "requestBody": {
         "required": true,
         "content": {
@@ -11,33 +12,33 @@
               "type": "object",
               "required": ["documento", "apellido", "nombres", "email", "contrasenia", "rol"],
               "properties": {
-                "documento": { "type": "string", "description": "Número de documento (único)" },
+                "documento": { "type": "string", "description": "Numero de documento unico" },
                 "apellido": { "type": "string" },
                 "nombres": { "type": "string" },
                 "email": { "type": "string", "format": "email" },
-                "contrasenia": { "type": "string", "description": "Contraseña en texto plano" },
-                "rol": { "type": "integer", "description": "1=Médico, 2=Paciente, 3=Admin" },
+                "contrasenia": { "type": "string", "description": "Contrasenia en texto plano" },
+                "rol": { "type": "integer", "description": "1=Medico, 2=Paciente, 3=Admin" },
                 "id_obra_social": { "type": "integer", "description": "Obligatorio si rol=2" },
                 "id_especialidad": { "type": "integer", "description": "Obligatorio si rol=1" },
                 "matricula": { "type": "integer", "description": "Obligatorio si rol=1" },
                 "descripcion": { "type": "string", "description": "Opcional, solo para rol=1" },
                 "valor_consulta": { "type": "number", "description": "Obligatorio si rol=1" },
-                "foto_path": { "type": "string", "description": "Nombre del archivo de foto (se asigna automáticamente)" }
+                "foto_path": { "type": "string", "description": "Nombre del archivo de foto si se carga" }
               }
             },
             "examples": {
               "medico": {
-                "summary": "Registrar médico",
+                "summary": "Registrar medico",
                 "value": {
                   "documento": "31000115",
-                  "apellido": "García",
+                  "apellido": "Garcia",
                   "nombres": "Carlos",
                   "email": "cargar@correo.com",
                   "contrasenia": "cargar",
                   "rol": 1,
                   "id_especialidad": 2,
                   "matricula": 12345,
-                  "descripcion": "Médico clínico",
+                  "descripcion": "Medico clinico",
                   "valor_consulta": 5000
                 }
               },
@@ -45,19 +46,19 @@
                 "summary": "Registrar paciente",
                 "value": {
                   "documento": "41000114",
-                  "apellido": "Martínez",
+                  "apellido": "Martinez",
                   "nombres": "Ana",
                   "email": "anamar@correo.com",
                   "contrasenia": "anamar",
                   "rol": 2,
-                  "id_obra_social": 7
+                  "id_obra_social": 1
                 }
               },
               "admin": {
                 "summary": "Registrar administrador",
                 "value": {
                   "documento": "51000113",
-                  "apellido": "Rodríguez",
+                  "apellido": "Rodriguez",
                   "nombres": "Pedro",
                   "email": "pedrodr@correo.com",
                   "contrasenia": "pedrodr",
@@ -71,18 +72,18 @@
               "type": "object",
               "required": ["documento", "apellido", "nombres", "email", "contrasenia", "rol"],
               "properties": {
-                "documento": { "type": "string", "description": "Número de documento (único)" },
+                "documento": { "type": "string" },
                 "apellido": { "type": "string" },
                 "nombres": { "type": "string" },
                 "email": { "type": "string", "format": "email" },
-                "contrasenia": { "type": "string", "description": "Contraseña en texto plano" },
-                "rol": { "type": "string", "description": "1=Médico, 2=Paciente, 3=Admin (string en form-data)" },
+                "contrasenia": { "type": "string" },
+                "rol": { "type": "string", "description": "1=Medico, 2=Paciente, 3=Admin" },
                 "id_obra_social": { "type": "string", "description": "Obligatorio si rol=2" },
                 "id_especialidad": { "type": "string", "description": "Obligatorio si rol=1" },
                 "matricula": { "type": "string", "description": "Obligatorio si rol=1" },
-                "descripcion": { "type": "string", "description": "Opcional, solo para rol=1" },
-                "valor_consulta": { "type": "number", "description": "Obligatorio si rol=1" },
-                "foto": { "type": "string", "format": "binary", "description": "Foto de perfil (archivo)" }
+                "descripcion": { "type": "string" },
+                "valor_consulta": { "type": "string", "description": "Obligatorio si rol=1" },
+                "foto": { "type": "string", "format": "binary", "description": "Foto de perfil" }
               }
             },
             "encoding": {
@@ -112,19 +113,59 @@
             }
           }
         },
-        "400": { "description": "Error de validación: email duplicado, faltan campos según el rol, etc." },
+        "400": {
+          "description": "Error de validacion: email duplicado, campos faltantes o errores segun el rol",
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "estado": { "type": "boolean", "example": false },
+                      "mensaje": { "type": "string", "example": "El email ya esta registrado" }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "errors": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "msg": { "type": "string", "example": "Matricula debe ser un entero positivo" },
+                            "path": { "type": "string", "example": "matricula" },
+                            "location": { "type": "string", "example": "body" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado (solo admin)" },
         "500": { "description": "Error interno" }
       }
     }
   },
   "/api/v1/usuarios/{id_usuario}": {
     "put": {
-      "summary": "Modifica un usuario (Admin, rol=3)",
+      "summary": "Modifica un usuario (Admin)",
       "tags": ["Usuarios"],
       "security": [{ "bearerAuth": [] }],
-      "parameters": [{
-        "name": "id_usuario", "in": "path", "required": true, "schema": { "type": "integer" }
-      }],
+      "parameters": [
+        {
+          "name": "id_usuario",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "integer" }
+        }
+      ],
       "requestBody": {
         "content": {
           "application/json": {
@@ -136,7 +177,7 @@
                 "nombres": { "type": "string" },
                 "email": { "type": "string", "format": "email" },
                 "contrasenia": { "type": "string" },
-                "rol": { "type": "integer", "description": "1=Médico, 2=Paciente, 3=Admin" },
+                "rol": { "type": "integer", "description": "1=Medico, 2=Paciente, 3=Admin" },
                 "id_obra_social": { "type": "integer", "description": "Obligatorio si se cambia a rol=2" },
                 "id_especialidad": { "type": "integer", "description": "Obligatorio si se cambia a rol=1" },
                 "matricula": { "type": "integer", "description": "Obligatorio si se cambia a rol=1" },
@@ -154,13 +195,13 @@
                 "nombres": { "type": "string" },
                 "email": { "type": "string", "format": "email" },
                 "contrasenia": { "type": "string" },
-                "rol": { "type": "string", "description": "1=Médico, 2=Paciente, 3=Admin (string en form-data)" },
+                "rol": { "type": "string", "description": "1=Medico, 2=Paciente, 3=Admin" },
                 "id_obra_social": { "type": "string" },
                 "id_especialidad": { "type": "string" },
                 "matricula": { "type": "string" },
                 "descripcion": { "type": "string" },
                 "valor_consulta": { "type": "string" },
-                "foto": { "type": "string", "format": "binary", "description": "Foto de perfil (archivo)" }
+                "foto": { "type": "string", "format": "binary", "description": "Foto de perfil" }
               }
             },
             "encoding": {
@@ -170,8 +211,21 @@
         }
       },
       "responses": {
-        "200": { "description": "Usuario modificado" },
-        "400": { "description": "Error de validación" },
+        "200": {
+          "description": "Usuario modificado",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "mensaje": { "type": "string", "example": "Usuario modificado." }
+                }
+              }
+            }
+          }
+        },
+        "400": { "description": "Error de validacion" },
         "404": { "description": "Usuario no encontrado" },
         "401": { "description": "No autorizado" },
         "403": { "description": "Acceso denegado (solo admin)" },
@@ -182,11 +236,29 @@
       "summary": "Desactiva un usuario (soft delete, Admin)",
       "tags": ["Usuarios"],
       "security": [{ "bearerAuth": [] }],
-      "parameters": [{
-        "name": "id_usuario", "in": "path", "required": true, "schema": { "type": "integer" }
-      }],
+      "parameters": [
+        {
+          "name": "id_usuario",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "integer" }
+        }
+      ],
       "responses": {
-        "200": { "description": "Usuario desactivado" },
+        "200": {
+          "description": "Usuario desactivado",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "mensaje": { "type": "string", "example": "Usuario desactivado." }
+                }
+              }
+            }
+          }
+        },
         "404": { "description": "Usuario no encontrado" },
         "401": { "description": "No autorizado" },
         "403": { "description": "Acceso denegado (solo admin)" },
