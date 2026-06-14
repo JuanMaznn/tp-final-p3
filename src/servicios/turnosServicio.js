@@ -40,13 +40,13 @@ export default class TurnosServicio {
 
   modificar = async (id_turno, datos) => {
     const turno = await this.turnos.buscarPorId(id_turno);
-    if (!turno) return null;
+    if (!turno) return { error: 'Turno no encontrado.' };
 
     const medico = await this.medicos.buscarId(datos.id_medico);
-    if (!medico) return null;
+    if (!medico) return { error: 'El medico no existe.' };
 
     const paciente = await this.pacientes.buscarPorId(datos.id_paciente);
-    if (!paciente) return null;
+    if (!paciente) return { error: 'El paciente no existe.' };
 
     let valor = medico.valor_consulta;
     if (paciente.id_obra_social) {
@@ -66,12 +66,13 @@ export default class TurnosServicio {
     };
 
     const ok = await this.turnos.modificar(id_turno, turnoActualizado);
-    return ok ? turnoActualizado : null;
+    if (!ok) return { error: 'No se pudo modificar el turno.' };
+    return turnoActualizado;
   };
 
   crear = async (turno) => {
     const medico = await this.medicos.buscarId(turno.id_medico);
-    if (!medico) return { error: 'El médico no existe.' };
+    if (!medico) return { error: 'El medico no existe.' };
 
     const paciente = await this.pacientes.buscarPorId(turno.id_paciente);
     if (!paciente) return { error: 'El paciente no existe.' };
@@ -91,7 +92,7 @@ export default class TurnosServicio {
     turno.id_obra_social = paciente.id_obra_social;
 
     const id_nuevo = await this.turnos.crear(turno);
-    if (!id_nuevo) return null;
+    if (!id_nuevo) return { error: 'No se pudo crear el turno.' };
     return this.turnos.buscarPorId(id_nuevo);
   };
 

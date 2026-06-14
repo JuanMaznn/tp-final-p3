@@ -30,23 +30,30 @@ export default class TurnosControlador {
 
       const nuevoTurno = await this.turnos.crear(turno);
 
+      if (nuevoTurno?.error) {
+        const status =
+          nuevoTurno.error === 'El medico no existe.' ||
+          nuevoTurno.error === 'El paciente no existe.'
+            ? 400
+            : 500;
+
+        return res.status(status).json({
+          estado: false,
+          mensaje: nuevoTurno.error,
+        });
+      }
+
       if (!nuevoTurno) {
-        res.status(400).json({
+        return res.status(400).json({
           estado: false,
           mensaje: 'No se pudo crear el turno.',
         });
-        return;
-      }
-
-      if (nuevoTurno.error) {
-        res.status(400).json({ estado: false, mensaje: nuevoTurno.error });
-        return;
       }
 
       res.status(201).json({
         estado: true,
-        mensaje: 'Turno Creado.',
-        datos: nuevoTurno,
+        mensaje: 'Turno creado correctamente.',
+        turno: nuevoTurno,
       });
     } catch (error) {
       console.log(`Error en POST /turnos ${error}`);
@@ -64,7 +71,9 @@ export default class TurnosControlador {
         req.user,
       );
       if (!turno) {
-        res.status(404).json({ estado: false, mensaje: 'Turno no encontrado o no tienes acceso' });
+        res
+          .status(404)
+          .json({ estado: false, mensaje: 'Turno no encontrado o no tienes acceso' });
         return;
       }
       res.status(200).json({ estado: true, turno });
@@ -82,18 +91,32 @@ export default class TurnosControlador {
         id_paciente,
         fecha_hora,
       });
-      if (!resultado) {
-        res
-          .status(404)
-          .json({
-            estado: false,
-            mensaje: 'Turno no encontrado o datos inválidos',
-          });
-        return;
+
+      if (resultado?.error) {
+        const status =
+          resultado.error === 'El medico no existe.' ||
+          resultado.error === 'El paciente no existe.'
+            ? 400
+            : resultado.error === 'Turno no encontrado.'
+              ? 404
+              : 500;
+
+        return res.status(status).json({
+          estado: false,
+          mensaje: resultado.error,
+        });
       }
+
+      if (!resultado) {
+        return res.status(404).json({
+          estado: false,
+          mensaje: 'Turno no encontrado o datos invalidos',
+        });
+      }
+
       res
         .status(200)
-        .json({ estado: true, mensaje: 'Turno modificado', turno: resultado });
+        .json({ estado: true, mensaje: 'Turno modificado.', turno: resultado });
     } catch (error) {
       console.log(`Error en PUT /turnos/id ${error}`);
       res.status(500).json({ estado: false, mensaje: 'Error interno' });
@@ -107,11 +130,12 @@ export default class TurnosControlador {
         id_turno,
         req.user.id_usuario,
       );
-      if (!result)
+      if (!result) {
         return res.status(404).json({
           estado: false,
           mensaje: 'Turno no encontrado o no te pertenece',
         });
+      }
       res
         .status(200)
         .json({ estado: true, mensaje: 'Turno marcado como atendido' });

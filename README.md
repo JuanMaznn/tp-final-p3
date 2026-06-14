@@ -136,6 +136,9 @@ Respuesta: { "estado": true, "token": "..." }
 }
 ```
 
+Formato esperado para `fecha_hora`: `YYYY-MM-DD HH:mm:ss`
+Ejemplo valido: `2026-06-15 10:00:00`
+
 El `valor_total` se calcula automáticamente según la obra social del paciente:
 - Si la obra social es **particular**: `valor_total = medicos.valor_consulta`
 - Si la obra social **no es particular**: `valor_total = valor_consulta - (descuento * valor_consulta)`
