@@ -21,8 +21,7 @@ export default class ObrasSocialesServicio {
   };
 
   crear = async (obra_social) => {
-    const result = await this.obras_sociales.crear(obra_social);
-    return this.buscarPorId(result.insertId);
+    return this.obras_sociales.crear(obra_social);
   };
 
   eliminar = async (id_obra_social) => {
