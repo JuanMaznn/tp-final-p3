@@ -95,6 +95,7 @@
   "/api/v1/auditoria/usuario/{id_usuario}": {
     "get": {
       "summary": "Historial de acciones de un usuario puntual (Admin)",
+      "description": "Historial filtrado por usuario. Todos los parámetros query son opcionales y permiten acotar la búsqueda.",
       "tags": ["Auditoria"],
       "security": [{ "bearerAuth": [] }],
       "parameters": [
@@ -103,6 +104,58 @@
           "in": "path",
           "required": true,
           "schema": { "type": "integer" }
+        },
+        {
+          "name": "entidad",
+          "in": "query",
+          "required": false,
+          "schema": { "type": "string" },
+          "description": "Recurso afectado (turnos, medicos, especialidades, etc.)"
+        },
+        {
+          "name": "accion",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["CONSULTAR", "CREAR", "ACTUALIZAR", "ELIMINAR"]
+          }
+        },
+        {
+          "name": "metodo",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+          },
+          "description": "Método HTTP de la acción"
+        },
+        {
+          "name": "desde",
+          "in": "query",
+          "required": false,
+          "schema": { "type": "string", "format": "date-time" },
+          "description": "Fecha/hora mínima (ISO 8601)"
+        },
+        {
+          "name": "hasta",
+          "in": "query",
+          "required": false,
+          "schema": { "type": "string", "format": "date-time" },
+          "description": "Fecha/hora máxima (ISO 8601)"
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "required": false,
+          "schema": { "type": "integer", "default": 50, "maximum": 200 }
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "required": false,
+          "schema": { "type": "integer", "default": 0 }
         }
       ],
       "responses": {
