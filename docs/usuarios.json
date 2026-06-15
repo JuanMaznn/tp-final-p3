@@ -187,7 +187,7 @@
   },
   "/api/v1/usuarios": {
     "get": {
-      "summary": "Lista todos los usuarios activos",
+      "summary": "[Admin] Lista todos los usuarios activos",
       "tags": ["Usuarios"],
       "security": [{ "bearerAuth": [] }],
       "responses": {
@@ -205,7 +205,7 @@
       }
     },
     "post": {
-      "summary": "Registra un nuevo usuario",
+      "summary": "[Admin] Registra un nuevo usuario",
       "tags": ["Usuarios"],
       "security": [{ "bearerAuth": [] }],
       "requestBody": {
@@ -309,8 +309,60 @@
     }
   },
   "/api/v1/usuarios/{id_usuario}": {
+    "get": {
+      "summary": "[Admin] Obtiene un usuario por ID",
+      "tags": ["Usuarios"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "name": "id_usuario",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "integer" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Usuario encontrado",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "usuario": {
+                    "type": "object",
+                    "properties": {
+                      "id_usuario": { "type": "integer", "example": 1 },
+                      "documento": { "type": "string", "example": "41000114" },
+                      "apellido": { "type": "string", "example": "Martinez" },
+                      "nombres": { "type": "string", "example": "Ana" },
+                      "email": { "type": "string", "example": "ana@correo.com" },
+                      "rol": { "type": "integer", "example": 2 },
+                      "foto_path": { "type": "string", "example": "" },
+                      "activo": { "type": "integer", "example": 1 }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Usuario no encontrado",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UsuarioErrorResponse" }
+            }
+          }
+        },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado (solo admin)" },
+        "500": { "description": "Error interno" }
+      }
+    },
     "put": {
-      "summary": "Modifica un usuario",
+      "summary": "[Admin] Modifica un usuario",
       "tags": ["Usuarios"],
       "security": [{ "bearerAuth": [] }],
       "parameters": [
@@ -389,7 +441,7 @@
       }
     },
     "delete": {
-      "summary": "Desactiva un usuario",
+      "summary": "[Admin] Desactiva un usuario",
       "tags": ["Usuarios"],
       "security": [{ "bearerAuth": [] }],
       "parameters": [

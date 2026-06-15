@@ -13,6 +13,13 @@ const usuariosControlador = new UsuariosControlador();
 
 router.get('/', autorizarUsuarios([3]), usuariosControlador.buscarTodos);
 
+router.get(
+  '/:id_usuario',
+  autorizarUsuarios([3]),
+  [param('id_usuario', 'Debe ser entero').isInt(), validarCampos],
+  usuariosControlador.buscarPorId,
+);
+
 router.post(
   '/',
   autorizarUsuarios([3]),
