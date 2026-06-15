@@ -8,6 +8,7 @@ import { router as v1AuthRutas } from './rutas/v1/authRutas.js';
 import { router as pacientesRutas } from './rutas/v1/pacientesRutas.js';
 import { router as v1EstadisticasRutas } from './rutas/v1/estadisticasRutas.js';
 import { router as v1UsuariosRutas } from './rutas/v1/usuariosRutas.js';
+import { router as v1AuditoriaRutas } from './rutas/v1/auditoriaRutas.js';
 import { swaggerUi, swaggerDocument } from './config/swagger.js';
 import cors from 'cors';
 import passport from 'passport';
@@ -19,6 +20,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // estrategias
 import { estrategia, validacion } from './config/passport.js';
+
+// middleware de auditoría
+import auditoria from './middlewares/auditoria.js';
 
 const app = express();
 app.use(express.json());
@@ -49,40 +53,56 @@ app.get('/', (req, res) => {
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // VINCULAR RUTAS MODULARES / usar passport acá
+// El middleware `auditoria` corre DESPUÉS de passport (ya hay req.user) y
+// registra cada acción del usuario al finalizar la respuesta.
 app.use(
   '/api/v1/especialidades',
   passport.authenticate('jwt', { session: false }),
+  auditoria,
   v1EspecialidadesRutas,
 );
 app.use(
   '/api/v1/obras-sociales',
   passport.authenticate('jwt', { session: false }),
+  auditoria,
   v1ObrasSociales,
 );
 app.use(
   '/api/v1/turnos',
   passport.authenticate('jwt', { session: false }),
+  auditoria,
   v1TurnosReservas,
 );
 app.use(
   '/api/v1/medicos',
   passport.authenticate('jwt', { session: false }),
+  auditoria,
   v1MedicosRutas,
 );
 app.use(
   '/api/v1/pacientes',
   passport.authenticate('jwt', { session: false }),
+  auditoria,
   pacientesRutas,
 );
 app.use(
   '/api/v1/estadisticas',
   passport.authenticate('jwt', { session: false }),
+  auditoria,
   v1EstadisticasRutas,
 );
 app.use(
   '/api/v1/usuarios',
   passport.authenticate('jwt', { session: false }),
+  auditoria,
   v1UsuariosRutas,
+);
+// Consulta del historial (solo admin). SIN el middleware `auditoria` para no
+// auto-registrar las consultas al propio log.
+app.use(
+  '/api/v1/auditoria',
+  passport.authenticate('jwt', { session: false }),
+  v1AuditoriaRutas,
 );
 app.use('/api/v1/auth', v1AuthRutas);
 

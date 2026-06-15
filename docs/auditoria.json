@@ -1,0 +1,190 @@
+{
+  "/api/v1/auditoria": {
+    "get": {
+      "summary": "Lista el historial de auditoría con filtros (Admin)",
+      "description": "Historial de acciones de todos los usuarios. Solo accesible por el administrador (rol 3). Admite filtros opcionales y paginación.",
+      "tags": ["Auditoria"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "name": "id_usuario",
+          "in": "query",
+          "required": false,
+          "schema": { "type": "integer" },
+          "description": "Filtra por el usuario que ejecutó la acción"
+        },
+        {
+          "name": "entidad",
+          "in": "query",
+          "required": false,
+          "schema": { "type": "string", "example": "turnos" },
+          "description": "Recurso afectado (turnos, medicos, especialidades, etc.)"
+        },
+        {
+          "name": "metodo",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+          },
+          "description": "Método HTTP de la acción"
+        },
+        {
+          "name": "accion",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["CONSULTAR", "CREAR", "ACTUALIZAR", "ELIMINAR"]
+          }
+        },
+        {
+          "name": "desde",
+          "in": "query",
+          "required": false,
+          "schema": { "type": "string", "format": "date-time" },
+          "description": "Fecha/hora mínima (ISO 8601)"
+        },
+        {
+          "name": "hasta",
+          "in": "query",
+          "required": false,
+          "schema": { "type": "string", "format": "date-time" },
+          "description": "Fecha/hora máxima (ISO 8601)"
+        },
+        {
+          "name": "limit",
+          "in": "query",
+          "required": false,
+          "schema": { "type": "integer", "default": 50, "maximum": 200 }
+        },
+        {
+          "name": "offset",
+          "in": "query",
+          "required": false,
+          "schema": { "type": "integer", "default": 0 }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Registros de auditoría encontrados",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "mensaje": { "type": "string" },
+                  "auditorias": {
+                    "type": "array",
+                    "items": { "$ref": "#/components/schemas/AuditoriaRegistro" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": { "description": "Error de validación de los filtros" },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado (solo admin)" },
+        "500": { "description": "Error interno" }
+      }
+    }
+  },
+  "/api/v1/auditoria/usuario/{id_usuario}": {
+    "get": {
+      "summary": "Historial de acciones de un usuario puntual (Admin)",
+      "tags": ["Auditoria"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "name": "id_usuario",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "integer" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Historial del usuario",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "mensaje": { "type": "string" },
+                  "auditorias": {
+                    "type": "array",
+                    "items": { "$ref": "#/components/schemas/AuditoriaRegistro" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "400": { "description": "id_usuario debe ser entero" },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado (solo admin)" },
+        "500": { "description": "Error interno" }
+      }
+    }
+  },
+  "/api/v1/auditoria/{id_auditoria}": {
+    "get": {
+      "summary": "Obtiene un registro de auditoría por ID (Admin)",
+      "tags": ["Auditoria"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "name": "id_auditoria",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "integer" }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Registro encontrado",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "estado": { "type": "boolean", "example": true },
+                  "mensaje": { "type": "string" },
+                  "auditoria": { "$ref": "#/components/schemas/AuditoriaRegistro" }
+                }
+              }
+            }
+          }
+        },
+        "404": { "description": "Registro de auditoría no encontrado" },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado (solo admin)" },
+        "500": { "description": "Error interno" }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AuditoriaRegistro": {
+        "type": "object",
+        "properties": {
+          "id_auditoria": { "type": "integer", "example": 12 },
+          "id_usuario": { "type": "integer", "nullable": true, "example": 1 },
+          "usuario": { "type": "string", "example": "Admin Administrador" },
+          "usuario_email": { "type": "string", "example": "admin@turnos.local" },
+          "metodo": { "type": "string", "example": "POST" },
+          "ruta": { "type": "string", "example": "/api/v1/especialidades" },
+          "accion": { "type": "string", "example": "CREAR" },
+          "entidad": { "type": "string", "example": "especialidades" },
+          "id_entidad": { "type": "integer", "nullable": true, "example": 5 },
+          "status_code": { "type": "integer", "example": 201 },
+          "fecha_hora": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
+}
