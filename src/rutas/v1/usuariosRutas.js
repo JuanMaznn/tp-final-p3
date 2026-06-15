@@ -11,6 +11,8 @@ const upload = multer({ storage });
 const router = express.Router();
 const usuariosControlador = new UsuariosControlador();
 
+router.get('/', autorizarUsuarios([3]), usuariosControlador.buscarTodos);
+
 router.post(
   '/',
   autorizarUsuarios([3]),

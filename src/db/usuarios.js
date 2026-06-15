@@ -7,6 +7,12 @@ export default class Usuarios {
     return usuario[0];
   };
 
+  buscarTodos = async () => {
+    const sql = 'SELECT id_usuario, documento, apellido, nombres, email, rol, foto_path, activo FROM usuarios WHERE activo = 1';
+    const [rows] = await pool.execute(sql);
+    return rows;
+  };
+
   buscar = async (email, contrasenia) => {
     const sql = `SELECT u.id_usuario, CONCAT(u.nombres, ' ', u.apellido) as usuario, u.rol
                  FROM usuarios AS u
@@ -18,28 +24,30 @@ export default class Usuarios {
   };
 
   buscarPorEmail = async (email) => {
-    const sql = 'SELECT id_usuario FROM usuarios WHERE email = ?';
+    const sql = 'SELECT id_usuario FROM usuarios WHERE email = ? AND activo = 1';
     const [rows] = await pool.execute(sql, [email]);
     return rows[0] || null;
   };
 
   buscarPorDocumento = async (documento) => {
-    const sql = 'SELECT id_usuario FROM usuarios WHERE documento = ?';
+    const sql = 'SELECT id_usuario FROM usuarios WHERE documento = ? AND activo = 1';
     const [rows] = await pool.execute(sql, [documento]);
     return rows[0] || null;
   };
 
-  desactivar = async (id_usuario) => {
+  desactivar = async (id_usuario, connection) => {
+    const conn = connection || pool;
     const sql = 'UPDATE usuarios SET activo = 0 WHERE id_usuario = ?';
-    await pool.execute(sql, [id_usuario]);
+    await conn.execute(sql, [id_usuario]);
   };
 
-  crear = async (datos) => {
+  crear = async (datos, connection) => {
+    const conn = connection || pool;
     const { documento, apellido, nombres, email, contrasenia, rol, foto_path } =
       datos;
     const sql = `INSERT INTO usuarios (documento, apellido, nombres, email, contrasenia, rol, foto_path, activo)
                  VALUES (?, ?, ?, ?, SHA2(?, 256), ?, ?, 1)`;
-    const [result] = await pool.execute(sql, [
+    const [result] = await conn.execute(sql, [
       documento,
       apellido,
       nombres,
@@ -51,11 +59,12 @@ export default class Usuarios {
     return result.insertId || null;
   };
 
-  crearMedico = async (id_usuario, datos) => {
+  crearMedico = async (id_usuario, datos, connection) => {
+    const conn = connection || pool;
     const { id_especialidad, matricula, descripcion, valor_consulta } = datos;
     const sql = `INSERT INTO medicos (id_usuario, id_especialidad, matricula, descripcion, valor_consulta)
                  VALUES (?, ?, ?, ?, ?)`;
-    await pool.execute(sql, [
+    await conn.execute(sql, [
       id_usuario,
       id_especialidad,
       matricula,
@@ -64,10 +73,11 @@ export default class Usuarios {
     ]);
   };
 
-  crearPaciente = async (id_usuario, id_obra_social) => {
+  crearPaciente = async (id_usuario, id_obra_social, connection) => {
+    const conn = connection || pool;
     const sql =
       'INSERT INTO pacientes (id_usuario, id_obra_social) VALUES (?, ?)';
-    await pool.execute(sql, [id_usuario, id_obra_social]);
+    await conn.execute(sql, [id_usuario, id_obra_social]);
   };
 
   modificar = async (id_usuario, datos) => {

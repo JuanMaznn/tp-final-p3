@@ -16,12 +16,18 @@ export default class ObrasSocialesServicio {
   modificar = async (id_obra_social, obra_social) => {
     const existe = await this.obras_sociales.buscarPorId(id_obra_social);
     if (existe.length === 0) return null;
-    await this.obras_sociales.actualizar(id_obra_social, obra_social);
+    await this.obras_sociales.actualizar(id_obra_social, {
+      ...obra_social,
+      porcentajeDescuento: obra_social.porcentajeDescuento / 100,
+    });
     return this.buscarPorId(id_obra_social);
   };
 
   crear = async (obra_social) => {
-    return this.obras_sociales.crear(obra_social);
+    return this.obras_sociales.crear({
+      ...obra_social,
+      porcentajeDescuento: obra_social.porcentajeDescuento / 100,
+    });
   };
 
   eliminar = async (id_obra_social) => {

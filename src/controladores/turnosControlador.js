@@ -28,14 +28,16 @@ export default class TurnosControlador {
       const { id_medico, id_paciente, fecha_hora } = req.body;
       const turno = { id_medico, id_paciente, fecha_hora };
 
-      const nuevoTurno = await this.turnos.crear(turno);
+      const nuevoTurno = await this.turnos.crear(turno, req.user);
 
       if (nuevoTurno?.error) {
         const status =
-          nuevoTurno.error === 'El medico no existe.' ||
-          nuevoTurno.error === 'El paciente no existe.'
-            ? 400
-            : 500;
+          nuevoTurno.error === 'Solo puedes crear turnos para tu propio perfil.'
+            ? 403
+            : nuevoTurno.error === 'El medico no existe.' ||
+                nuevoTurno.error === 'El paciente no existe.'
+              ? 400
+              : 500;
 
         return res.status(status).json({
           estado: false,

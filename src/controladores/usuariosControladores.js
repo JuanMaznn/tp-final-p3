@@ -5,6 +5,16 @@ export default class UsuariosControlador {
     this.usuariosServicio = new UsuariosServicio();
   }
 
+  buscarTodos = async (req, res) => {
+    try {
+      const usuarios = await this.usuariosServicio.buscarTodos();
+      res.status(200).json({ estado: true, usuarios });
+    } catch (error) {
+      console.log('Error en GET /usuarios', error);
+      res.status(500).json({ estado: false, mensaje: 'Error interno.' });
+    }
+  };
+
   crear = async (req, res) => {
     try {
       const datos = { ...req.body };

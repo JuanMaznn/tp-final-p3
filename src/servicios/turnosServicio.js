@@ -70,7 +70,15 @@ export default class TurnosServicio {
     return turnoActualizado;
   };
 
-  crear = async (turno) => {
+  crear = async (turno, usuario) => {
+    if (usuario.rol === 2) {
+      const miPaciente = await this.pacientes.buscarPorIdUsuario(usuario.id_usuario);
+      if (!miPaciente) return { error: 'Perfil de paciente no encontrado.' };
+      if (Number(turno.id_paciente) !== miPaciente.id_paciente) {
+        return { error: 'Solo puedes crear turnos para tu propio perfil.' };
+      }
+    }
+
     const medico = await this.medicos.buscarId(turno.id_medico);
     if (!medico) return { error: 'El medico no existe.' };
 

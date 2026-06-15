@@ -144,6 +144,28 @@
           }
         }
       },
+      "UsuarioListResponse": {
+        "type": "object",
+        "properties": {
+          "estado": { "type": "boolean", "example": true },
+          "usuarios": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id_usuario": { "type": "integer", "example": 1 },
+                "documento": { "type": "string", "example": "41000114" },
+                "apellido": { "type": "string", "example": "Martinez" },
+                "nombres": { "type": "string", "example": "Ana" },
+                "email": { "type": "string", "example": "ana@correo.com" },
+                "rol": { "type": "integer", "example": 2 },
+                "foto_path": { "type": "string", "example": "" },
+                "activo": { "type": "integer", "example": 1 }
+              }
+            }
+          }
+        }
+      },
       "UsuarioMessageResponse": {
         "type": "object",
         "properties": {
@@ -164,6 +186,24 @@
     }
   },
   "/api/v1/usuarios": {
+    "get": {
+      "summary": "Lista todos los usuarios activos",
+      "tags": ["Usuarios"],
+      "security": [{ "bearerAuth": [] }],
+      "responses": {
+        "200": {
+          "description": "Lista de usuarios",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UsuarioListResponse" }
+            }
+          }
+        },
+        "401": { "description": "No autorizado" },
+        "403": { "description": "Acceso denegado (solo admin)" },
+        "500": { "description": "Error interno" }
+      }
+    },
     "post": {
       "summary": "Registra un nuevo usuario",
       "tags": ["Usuarios"],
