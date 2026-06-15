@@ -51,4 +51,53 @@ export default class UsuariosServicio {
     await this.usuarios.desactivar(id_usuario);
     return true;
   };
+
+  solicitarRecuperacionContrasenia = async (email) => {
+    const usuario = await this.usuarios.buscarPorEmail(email);
+    if (!usuario) {
+      return { error: 'No existe un usuario con ese email' };
+    }
+
+    // Generar token aleatorio
+    const token = Math.random().toString(36).substring(2, 15) + 
+                  Math.random().toString(36).substring(2, 15);
+
+    const tokenCreado = await this.usuarios.crearTokenRecuperacion(email, token);
+    if (!tokenCreado) {
+      return { error: 'No se pudo generar el token de recuperación' };
+    }
+
+    // En un entorno real, aquí se enviaría el email con el token
+    // Por ahora, devolvemos el token para testing
+    return { 
+      mensaje: 'Token de recuperación generado exitosamente',
+      token: token,
+      nota: 'En producción, este token se enviaría por email'
+    };
+  };
+
+  validarTokenRecuperacion = async (token) => {
+    const tokenValido = await this.usuarios.validarTokenRecuperacion(token);
+    if (!tokenValido) {
+      return { error: 'Token inválido o expirado' };
+    }
+    return { 
+      mensaje: 'Token válido',
+      email: tokenValido.email 
+    };
+  };
+
+  restablecerContrasenia = async (token, nuevaContrasenia) => {
+    const tokenValido = await this.usuarios.validarTokenRecuperacion(token);
+    if (!tokenValido) {
+      return { error: 'Token inválido o expirado' };
+    }
+
+    const actualizada = await this.usuarios.actualizarContraseniaConToken(token, nuevaContrasenia);
+    if (!actualizada) {
+      return { error: 'No se pudo actualizar la contraseña' };
+    }
+
+    return { mensaje: 'Contraseña actualizada exitosamente' };
+  };
 }

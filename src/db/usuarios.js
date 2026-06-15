@@ -75,4 +75,35 @@ export default class Usuarios {
     const [result] = await pool.query(sql, [datos, id_usuario]);
     return result.affectedRows > 0;
   };
+
+  crearTokenRecuperacion = async (email, token) => {
+    const sql = `UPDATE usuarios 
+                 SET reset_token = ?, 
+                     reset_token_expires = DATE_ADD(NOW(), INTERVAL 1 HOUR) 
+                 WHERE email = ? AND activo = 1`;
+    const [result] = await pool.execute(sql, [token, email]);
+    return result.affectedRows > 0;
+  };
+
+  validarTokenRecuperacion = async (token) => {
+    const sql = `SELECT id_usuario, email 
+                 FROM usuarios 
+                 WHERE reset_token = ? 
+                   AND reset_token_expires > NOW() 
+                   AND activo = 1`;
+    const [rows] = await pool.execute(sql, [token]);
+    return rows[0] || null;
+  };
+
+  actualizarContraseniaConToken = async (token, nuevaContrasenia) => {
+    const sql = `UPDATE usuarios 
+                 SET contrasenia = SHA2(?, 256),
+                     reset_token = NULL,
+                     reset_token_expires = NULL
+                 WHERE reset_token = ? 
+                   AND reset_token_expires > NOW()
+                   AND activo = 1`;
+    const [result] = await pool.execute(sql, [nuevaContrasenia, token]);
+    return result.affectedRows > 0;
+  };
 }

@@ -15,6 +15,7 @@ import passport from 'passport';
 import morgan from 'morgan';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { autenticarJWT } from './middlewares/autenticarJWT.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -23,6 +24,15 @@ import { estrategia, validacion } from './config/passport.js';
 
 // middleware de auditoría
 import auditoria from './middlewares/auditoria.js';
+
+// Cargar variables de entorno primero
+process.loadEnvFile();
+
+// Validar variables de entorno críticas
+if (!process.env.JWT_SECRET) {
+  console.error('ERROR: JWT_SECRET no está configurado en las variables de entorno');
+  process.exit(1);
+}
 
 const app = express();
 app.use(express.json());
@@ -52,61 +62,19 @@ app.get('/', (req, res) => {
 // SWAGGER
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// VINCULAR RUTAS MODULARES / usar passport acá
-// El middleware `auditoria` corre DESPUÉS de passport (ya hay req.user) y
-// registra cada acción del usuario al finalizar la respuesta.
-app.use(
-  '/api/v1/especialidades',
-  passport.authenticate('jwt', { session: false }),
-  auditoria,
-  v1EspecialidadesRutas,
-);
-app.use(
-  '/api/v1/obras-sociales',
-  passport.authenticate('jwt', { session: false }),
-  auditoria,
-  v1ObrasSociales,
-);
-app.use(
-  '/api/v1/turnos',
-  passport.authenticate('jwt', { session: false }),
-  auditoria,
-  v1TurnosReservas,
-);
-app.use(
-  '/api/v1/medicos',
-  passport.authenticate('jwt', { session: false }),
-  auditoria,
-  v1MedicosRutas,
-);
-app.use(
-  '/api/v1/pacientes',
-  passport.authenticate('jwt', { session: false }),
-  auditoria,
-  pacientesRutas,
-);
-app.use(
-  '/api/v1/estadisticas',
-  passport.authenticate('jwt', { session: false }),
-  auditoria,
-  v1EstadisticasRutas,
-);
-app.use(
-  '/api/v1/usuarios',
-  passport.authenticate('jwt', { session: false }),
-  auditoria,
-  v1UsuariosRutas,
-);
+// VINCULAR RUTAS MODULARES / usar middleware autenticarJWT + auditoría
+app.use('/api/v1/especialidades', autenticarJWT, auditoria, v1EspecialidadesRutas);
+app.use('/api/v1/obras-sociales', autenticarJWT, auditoria, v1ObrasSociales);
+app.use('/api/v1/turnos', autenticarJWT, auditoria, v1TurnosReservas);
+app.use('/api/v1/medicos', autenticarJWT, auditoria, v1MedicosRutas);
+app.use('/api/v1/pacientes', autenticarJWT, auditoria, pacientesRutas);
+app.use('/api/v1/estadisticas', autenticarJWT, auditoria, v1EstadisticasRutas);
+app.use('/api/v1/usuarios', autenticarJWT, auditoria, v1UsuariosRutas);
 // Consulta del historial (solo admin). SIN el middleware `auditoria` para no
 // auto-registrar las consultas al propio log.
-app.use(
-  '/api/v1/auditoria',
-  passport.authenticate('jwt', { session: false }),
-  v1AuditoriaRutas,
-);
+app.use('/api/v1/auditoria', autenticarJWT, v1AuditoriaRutas);
 app.use('/api/v1/auth', v1AuthRutas);
 
-process.loadEnvFile();
 const PUERTO = process.env.PUERTO || 3000;
 
 app.listen(PUERTO, () => {
