@@ -2,7 +2,7 @@ import { pool } from './conexion.js';
 
 export default class Usuarios {
   buscarPorId = async (id_usuario) => {
-    const sql = `SELECT * FROM usuarios WHERE id_usuario = ? AND activo = 1`;
+    const sql = `SELECT id_usuario, documento, apellido, nombres, email, rol, foto_path, activo FROM usuarios WHERE id_usuario = ? AND activo = 1`;
     const [usuario] = await pool.execute(sql, [id_usuario]);
     return usuario[0];
   };

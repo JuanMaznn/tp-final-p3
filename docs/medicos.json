@@ -23,6 +23,16 @@
           "valor_consulta": { "type": "string", "example": "5000.00" }
         }
       },
+      "MedicoResumenSimple": {
+        "type": "object",
+        "description": "Resumen sin id_usuario ni foto_path (usado en busqueda por especialidad)",
+        "properties": {
+          "id_medico": { "type": "integer", "example": 1 },
+          "apellido": { "type": "string", "example": "Lopez" },
+          "nombres": { "type": "string", "example": "Marcelo" },
+          "email": { "type": "string", "example": "lopmar@correo.com" }
+        }
+      },
       "MedicoUpdateRequest": {
         "type": "object",
         "required": [
@@ -199,7 +209,7 @@
                   "estado": { "type": "boolean", "example": true },
                   "medicos": {
                     "type": "array",
-                    "items": { "$ref": "#/components/schemas/MedicoResumen" }
+                    "items": { "$ref": "#/components/schemas/MedicoResumenSimple" }
                   }
                 }
               }
