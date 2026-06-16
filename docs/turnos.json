@@ -3,6 +3,7 @@
     "schemas": {
       "Turno": {
         "type": "object",
+        "description": "Detalle completo con datos del medico y paciente (usado en GET /{id} y POST)",
         "properties": {
           "id_turno_reserva": { "type": "integer", "example": 1 },
           "id_medico": { "type": "integer", "example": 1 },
@@ -15,25 +16,29 @@
           },
           "valor_total": { "type": "string", "example": "4500.00" },
           "atentido": { "type": "integer", "example": 0 },
-          "activo": { "type": "integer", "example": 1 }
+          "activo": { "type": "integer", "example": 1 },
+          "paciente_nombres": { "type": "string", "example": "Jacinto" },
+          "paciente_apellido": { "type": "string", "example": "Lopez" },
+          "paciente_documento": { "type": "string", "example": "41000111" },
+          "medico_nombres": { "type": "string", "example": "Marcelo" },
+          "medico_apellido": { "type": "string", "example": "Lopez" },
+          "medico_documento": { "type": "string", "example": "31000111" }
         }
       },
       "TurnoListadoAdmin": {
         "type": "object",
-        "description": "Admin: ve todos los turnos con nombres de medico y paciente",
+        "description": "Admin: ve todos los turnos con datos del medico y del paciente",
         "properties": {
           "id_turno_reserva": { "type": "integer", "example": 1 },
-          "fecha_hora": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2026-04-01T20:00:00.000Z"
-          },
+          "fecha_hora": { "type": "string", "format": "date-time", "example": "2026-04-01T20:00:00.000Z" },
           "valor_total": { "type": "string", "example": "4500.00" },
           "atentido": { "type": "integer", "example": 0 },
           "paciente_nombres": { "type": "string", "example": "Jacinto" },
           "paciente_apellido": { "type": "string", "example": "Lopez" },
+          "paciente_documento": { "type": "string", "example": "41000111" },
           "medico_nombres": { "type": "string", "example": "Marcelo" },
-          "medico_apellido": { "type": "string", "example": "Lopez" }
+          "medico_apellido": { "type": "string", "example": "Lopez" },
+          "medico_documento": { "type": "string", "example": "31000111" }
         }
       },
       "TurnoListadoMedico": {
@@ -41,15 +46,12 @@
         "description": "Medico: solo sus turnos con datos del paciente",
         "properties": {
           "id_turno_reserva": { "type": "integer", "example": 1 },
-          "fecha_hora": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2026-04-01T20:00:00.000Z"
-          },
+          "fecha_hora": { "type": "string", "format": "date-time", "example": "2026-04-01T20:00:00.000Z" },
           "valor_total": { "type": "string", "example": "4500.00" },
           "atentido": { "type": "integer", "example": 0 },
           "paciente_nombres": { "type": "string", "example": "Jacinto" },
           "paciente_apellido": { "type": "string", "example": "Lopez" },
+          "paciente_documento": { "type": "string", "example": "41000111" },
           "obra_social": { "type": "string", "example": "jer" }
         }
       },
@@ -58,15 +60,12 @@
         "description": "Paciente: solo sus turnos con datos del medico",
         "properties": {
           "id_turno_reserva": { "type": "integer", "example": 1 },
-          "fecha_hora": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2026-04-01T20:00:00.000Z"
-          },
+          "fecha_hora": { "type": "string", "format": "date-time", "example": "2026-04-01T20:00:00.000Z" },
           "valor_total": { "type": "string", "example": "4500.00" },
           "atentido": { "type": "integer", "example": 0 },
           "medico_nombres": { "type": "string", "example": "Marcelo" },
-          "medico_apellido": { "type": "string", "example": "Lopez" }
+          "medico_apellido": { "type": "string", "example": "Lopez" },
+          "medico_documento": { "type": "string", "example": "31000111" }
         }
       },
       "TurnoCreacion": {
@@ -119,7 +118,7 @@
       "summary": "Lista turnos del usuario autenticado",
       "tags": ["Turnos"],
       "security": [{ "bearerAuth": [] }],
-      "description": "El respuesta de cada turno SEGUN EL ROL:\n- Admin: id_turno_reserva, fecha_hora, valor_total, atentido, paciente_nombres, paciente_apellido, medico_nombres, medico_apellido\n- Medico: id_turno_reserva, fecha_hora, valor_total, atentido, paciente_nombres, paciente_apellido, obra_social\n- Paciente: id_turno_reserva, fecha_hora, valor_total, atentido, medico_nombres, medico_apellido",
+      "description": "Cada turno incluye documento del medico y/o paciente segun el ROL:\n- Admin: id_turno_reserva, fecha_hora, valor_total, atentido, paciente_nombres, paciente_apellido, paciente_documento, medico_nombres, medico_apellido, medico_documento\n- Medico: id_turno_reserva, fecha_hora, valor_total, atentido, paciente_nombres, paciente_apellido, paciente_documento, obra_social\n- Paciente: id_turno_reserva, fecha_hora, valor_total, atentido, medico_nombres, medico_apellido, medico_documento",
       "responses": {
         "200": {
           "description": "Turnos encontrados.",
@@ -155,8 +154,10 @@
                         "atentido": 0,
                         "paciente_nombres": "Jacinto",
                         "paciente_apellido": "Lopez",
+                        "paciente_documento": "41000111",
                         "medico_nombres": "Marcelo",
-                        "medico_apellido": "Lopez"
+                        "medico_apellido": "Lopez",
+                        "medico_documento": "31000111"
                       }
                     ]
                   }
@@ -174,6 +175,7 @@
                         "atentido": 0,
                         "paciente_nombres": "Jacinto",
                         "paciente_apellido": "Lopez",
+                        "paciente_documento": "41000111",
                         "obra_social": "jer"
                       }
                     ]
@@ -191,7 +193,8 @@
                         "valor_total": "4500.00",
                         "atentido": 0,
                         "medico_nombres": "Marcelo",
-                        "medico_apellido": "Lopez"
+                        "medico_apellido": "Lopez",
+                        "medico_documento": "31000111"
                       }
                     ]
                   }
@@ -253,9 +256,16 @@
                       "id_medico": 2,
                       "id_paciente": 5,
                       "id_obra_social": 3,
-                      "fecha_hora": "2026-06-15 10:00:00",
-                      "valor_total": 12000,
-                      "atentido": 0
+                      "fecha_hora": "2026-06-15T10:00:00.000Z",
+                      "valor_total": "12000.00",
+                      "atentido": 0,
+                      "activo": 1,
+                      "paciente_nombres": "Lorena",
+                      "paciente_apellido": "Hunk",
+                      "paciente_documento": "41000112",
+                      "medico_nombres": "Horacio",
+                      "medico_apellido": "Benitez",
+                      "medico_documento": "31000113"
                     }
                   }
                 }

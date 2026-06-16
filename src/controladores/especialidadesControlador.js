@@ -26,7 +26,7 @@ export default class EspecialidadesControlador {
           .status(404)
           .json({ estado: false, msg: 'Especialidad no encontrada' });
       }
-      res.status(200).json({ estado: true, especialidad: especialidad });
+      res.status(200).json({ estado: true, especialidad: especialidad[0] });
     } catch (error) {
       console.log(`Error en GET /especialidad/:id ${error}`);
       res

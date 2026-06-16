@@ -5,6 +5,12 @@
 API REST para gestión de turnos médicos desarrollada en **Node.js + Express 5** con **MySQL**.
 Autenticación mediante **JWT** y autorización por **roles** (médico, paciente, administrador).
 
+## Actividades EXTRAS
+
+● Sistema de auditoría: historial de acciones por usuario.
+● Registro de usuarios: pacientes, médicos y administradores.
+● Reinicio de contraseña para los usuarios.
+
 ## Instalación
 
 ### Clonar el repositorio
@@ -44,7 +50,7 @@ mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS prog3_turnos;"
 mysql -u root -p prog3_turnos < sql/schema.sql
 ```
 
-#### 2. Fix porcentaje descuento (backfill)
+#### 2. Fix porcentaje descuento
 
 ```sh
 mysql -u root -p prog3_turnos < sql/fix_porcentaje_descuento.sql
@@ -59,7 +65,7 @@ Ejecutar **antes** de crear obras sociales nuevas.
 mysql -u root -p prog3_turnos < sql/tabla-auditoria.sql
 ```
 
-#### 4. Columnas recuperación de contraseña
+#### 4. Columnas recuperación de contraseña (feature extra)
 
 ```sh
 mysql -u root -p prog3_turnos < sql/agregar_columnas_recuperacion.sql
@@ -79,6 +85,17 @@ Ejemplo:
 ```sql
 GRANT EXECUTE ON PROCEDURE prog3_turnos.sp_estadisticas_atenciones TO 'prog3user'@'localhost';
 FLUSH PRIVILEGES;
+```
+
+### Resumen migraciones (copy-paste)
+
+```sh
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS prog3_turnos;"
+mysql -u root -p prog3_turnos < sql/schema.sql
+mysql -u root -p prog3_turnos < sql/fix_porcentaje_descuento.sql
+mysql -u root -p prog3_turnos < sql/tabla-auditoria.sql
+mysql -u root -p prog3_turnos < sql/agregar_columnas_recuperacion.sql
+mysql -u root -p prog3_turnos < src/procedimientos/sp_estadisticas_atenciones.sql
 ```
 
 ### Ejecutar el servidor

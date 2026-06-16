@@ -1,4 +1,44 @@
 {
+  "components": {
+    "schemas": {
+      "Especialidad": {
+        "type": "object",
+        "properties": {
+          "id_especialidad": { "type": "integer", "example": 1 },
+          "nombre": { "type": "string", "example": "PEDIATRÍA" },
+          "activo": { "type": "integer", "example": 1 }
+        }
+      },
+      "EspecialidadRequest": {
+        "type": "object",
+        "required": ["nombre"],
+        "properties": {
+          "nombre": { "type": "string", "example": "CARDIOLOGÍA" }
+        }
+      },
+      "EspecialidadResponse": {
+        "type": "object",
+        "properties": {
+          "estado": { "type": "boolean", "example": true },
+          "msg": { "type": "string", "example": "ID Creado 16" }
+        }
+      },
+      "EspecialidadMessage": {
+        "type": "object",
+        "properties": {
+          "estado": { "type": "boolean", "example": true },
+          "msg": { "type": "string", "example": "Especialidad modificada" }
+        }
+      },
+      "EspecialidadError": {
+        "type": "object",
+        "properties": {
+          "estado": { "type": "boolean", "example": false },
+          "msg": { "type": "string", "example": "Especialidad no encontrada" }
+        }
+      }
+    }
+  },
   "/api/v1/especialidades": {
     "get": {
       "summary": "Lista todas las especialidades activas",
@@ -15,14 +55,7 @@
                   "estado": { "type": "boolean", "example": true },
                   "especialidades": {
                     "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "id_especialidad": { "type": "integer" },
-                        "nombre": { "type": "string" },
-                        "activo": { "type": "integer" }
-                      }
-                    }
+                    "items": { "$ref": "#/components/schemas/Especialidad" }
                   }
                 }
               }
@@ -41,11 +74,7 @@
         "required": true,
         "content": {
           "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": { "nombre": { "type": "string" } },
-              "required": ["nombre"]
-            }
+            "schema": { "$ref": "#/components/schemas/EspecialidadRequest" }
           }
         }
       },
@@ -54,13 +83,7 @@
           "description": "Especialidad creada",
           "content": {
             "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "estado": { "type": "boolean", "example": true },
-                  "msg": { "type": "string", "example": "ID Creado 16" }
-                }
-              }
+              "schema": { "$ref": "#/components/schemas/EspecialidadResponse" }
             }
           }
         },
@@ -93,17 +116,7 @@
                 "type": "object",
                 "properties": {
                   "estado": { "type": "boolean", "example": true },
-                  "especialidad": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "id_especialidad": { "type": "integer" },
-                        "nombre": { "type": "string" },
-                        "activo": { "type": "integer" }
-                      }
-                    }
-                  }
+                  "especialidad": { "$ref": "#/components/schemas/Especialidad" }
                 }
               }
             }
@@ -131,11 +144,7 @@
         "required": true,
         "content": {
           "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": { "nombre": { "type": "string" } },
-              "required": ["nombre"]
-            }
+            "schema": { "$ref": "#/components/schemas/EspecialidadRequest" }
           }
         }
       },
@@ -144,13 +153,7 @@
           "description": "Especialidad actualizada",
           "content": {
             "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "estado": { "type": "boolean", "example": true },
-                  "msg": { "type": "string", "example": "Especialidad modificada" }
-                }
-              }
+              "schema": { "$ref": "#/components/schemas/EspecialidadMessage" }
             }
           }
         },
@@ -178,13 +181,7 @@
           "description": "Especialidad eliminada",
           "content": {
             "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "estado": { "type": "boolean", "example": true },
-                  "msg": { "type": "string", "example": "Especialidad eliminada." }
-                }
-              }
+              "schema": { "$ref": "#/components/schemas/EspecialidadMessage" }
             }
           }
         },

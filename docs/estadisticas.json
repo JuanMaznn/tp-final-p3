@@ -1,4 +1,94 @@
 {
+  "components": {
+    "schemas": {
+      "ResumenGeneral": {
+        "type": "object",
+        "properties": {
+          "total_turnos": { "type": "integer", "example": 6 },
+          "atendidos": { "type": "string", "example": "0" },
+          "pendientes": { "type": "string", "example": "6" },
+          "ingresos_totales": { "type": "string", "example": "178500.00" }
+        }
+      },
+      "EstadisticaPorMedico": {
+        "type": "object",
+        "properties": {
+          "apellido": { "type": "string", "example": "Lopez" },
+          "nombres": { "type": "string", "example": "Marcelo" },
+          "turnos": { "type": "integer", "example": 1 },
+          "ingresos": { "type": "string", "example": "4500.00" }
+        }
+      },
+      "EstadisticaPorEspecialidad": {
+        "type": "object",
+        "properties": {
+          "especialidad": { "type": "string", "example": "CLÍNICA" },
+          "turnos": { "type": "integer", "example": 1 },
+          "ingresos": { "type": "string", "example": "4500.00" }
+        }
+      },
+      "EstadisticaPorObraSocial": {
+        "type": "object",
+        "properties": {
+          "obra_social": { "type": "string", "example": "Jerárquicos" },
+          "turnos": { "type": "integer", "example": 1 },
+          "ingresos": { "type": "string", "example": "4500.00" }
+        }
+      },
+      "EstadisticasGenerales": {
+        "type": "object",
+        "properties": {
+          "estado": { "type": "boolean", "example": true },
+          "mensaje": { "type": "string", "example": "Estadísticas obtenidas." },
+          "resumen": { "$ref": "#/components/schemas/ResumenGeneral" },
+          "porMedico": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/EstadisticaPorMedico" }
+          },
+          "porEspecialidad": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/EstadisticaPorEspecialidad" }
+          },
+          "porObraSocial": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/EstadisticaPorObraSocial" }
+          }
+        }
+      },
+      "ResumenMedico": {
+        "type": "object",
+        "properties": {
+          "total_turnos": { "type": "integer", "example": 5 },
+          "atendidos": { "type": "string", "example": "2" },
+          "pendientes": { "type": "string", "example": "3" },
+          "ingresos_totales": { "type": "string", "example": "45000.00" }
+        }
+      },
+      "EstadisticaPorPaciente": {
+        "type": "object",
+        "properties": {
+          "apellido": { "type": "string", "example": "Aguirre" },
+          "nombres": { "type": "string", "example": "Brian" },
+          "total_turnos": { "type": "integer", "example": 1 },
+          "atendidos": { "type": "string", "example": "1" },
+          "pendientes": { "type": "string", "example": "0" },
+          "ingresos": { "type": "string", "example": "4450.00" }
+        }
+      },
+      "EstadisticasMedico": {
+        "type": "object",
+        "properties": {
+          "estado": { "type": "boolean", "example": true },
+          "mensaje": { "type": "string", "example": "Estadísticas del médico." },
+          "resumen": { "$ref": "#/components/schemas/ResumenMedico" },
+          "porPaciente": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/EstadisticaPorPaciente" }
+          }
+        }
+      }
+    }
+  },
   "/api/v1/estadisticas": {
     "get": {
       "summary": "Obtiene estadisticas generales (Admin)",
@@ -9,17 +99,7 @@
           "description": "Estadisticas obtenidas",
           "content": {
             "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "estado": { "type": "boolean", "example": true },
-                  "mensaje": { "type": "string", "example": "Estadisticas obtenidas." },
-                  "resumen": { "type": "object" },
-                  "porMedico": { "type": "array", "items": { "type": "object" } },
-                  "porEspecialidad": { "type": "array", "items": { "type": "object" } },
-                  "porObraSocial": { "type": "array", "items": { "type": "object" } }
-                }
-              }
+              "schema": { "$ref": "#/components/schemas/EstadisticasGenerales" }
             }
           }
         },
@@ -39,15 +119,7 @@
           "description": "Estadisticas del medico",
           "content": {
             "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "estado": { "type": "boolean", "example": true },
-                  "mensaje": { "type": "string", "example": "Estadisticas del medico." },
-                  "resumen": { "type": "object" },
-                  "porPaciente": { "type": "array", "items": { "type": "object" } }
-                }
-              }
+              "schema": { "$ref": "#/components/schemas/EstadisticasMedico" }
             }
           }
         },
@@ -67,10 +139,7 @@
           "description": "PDF generado",
           "content": {
             "application/pdf": {
-              "schema": {
-                "type": "string",
-                "format": "binary"
-              }
+              "schema": { "type": "string", "format": "binary" }
             }
           }
         },
@@ -90,10 +159,7 @@
           "description": "PDF generado",
           "content": {
             "application/pdf": {
-              "schema": {
-                "type": "string",
-                "format": "binary"
-              }
+              "schema": { "type": "string", "format": "binary" }
             }
           }
         },
