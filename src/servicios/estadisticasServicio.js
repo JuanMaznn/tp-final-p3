@@ -5,11 +5,11 @@ export default class EstadisticasServicio {
     this.estadisticas = new Estadisticas();
   }
 
-  obtener = () => {
+  obtener = async () => {
     return this.estadisticas.obtener();
   };
 
-  obtenerPorMedico = (id_usuario) => {
+  obtenerPorMedico = async (id_usuario) => {
     return this.estadisticas.obtenerPorMedico(id_usuario);
   };
 }

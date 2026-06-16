@@ -11,16 +11,6 @@ const medicosControlador = new MedicosControlador();
 router.get('/', autorizarUsuarios([1, 2, 3]), medicosControlador.buscarTodos);
 
 router.get(
-  '/:id_medico',
-  autorizarUsuarios([1, 2, 3]),
-  [
-    param('id_medico', 'El ID debe ser un número entero').isInt(),
-    validarCampos,
-  ],
-  medicosControlador.buscarId,
-);
-
-router.get(
   '/especialidad/:id_especialidad',
   autorizarUsuarios([1, 2, 3]),
   [
@@ -28,6 +18,16 @@ router.get(
     validarCampos,
   ],
   medicosControlador.buscarPorEspecialidad,
+);
+
+router.get(
+  '/:id_medico',
+  autorizarUsuarios([1, 2, 3]),
+  [
+    param('id_medico', 'El ID debe ser un número entero').isInt(),
+    validarCampos,
+  ],
+  medicosControlador.buscarId,
 );
 
 /* router.put(

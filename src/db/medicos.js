@@ -8,8 +8,18 @@ export default class Medicos {
   };
 
   buscarId = async (id_medico) => {
-    const sql = `SELECT * FROM medicos WHERE id_medico = ?`;
+    const sql = `SELECT m.* FROM medicos m
+                 INNER JOIN usuarios u ON u.id_usuario = m.id_usuario
+                 WHERE m.id_medico = ? AND u.activo = 1`;
     const [medico] = await pool.execute(sql, [id_medico]);
+    return medico[0];
+  };
+
+  buscarPorIdUsuario = async (id_usuario) => {
+    const sql = `SELECT m.* FROM medicos m
+                 INNER JOIN usuarios u ON u.id_usuario = m.id_usuario
+                 WHERE m.id_usuario = ? AND u.activo = 1`;
+    const [medico] = await pool.execute(sql, [id_usuario]);
     return medico[0];
   };
 

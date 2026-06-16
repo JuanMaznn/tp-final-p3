@@ -33,23 +33,42 @@ DB_PASSWORD='tu_contraseña'
 JWT_SECRET="sec"
 ```
 
-> **Importante:** Usar `127.0.0.1` en vez de `localhost` para evitar problemas de permisos MySQL con el usuario `'prog3user'@'%'`.
-
 ### Base de datos
 
-1. Crear la base de datos y las tablas necesarias.
+Ejecutar en **este orden** con un usuario con permisos de creación (root):
 
-2. Otorgar permisos al usuario `prog3user`:
-
-```sql
-GRANT SELECT, INSERT, UPDATE, EXECUTE ON `prog3_turnos`.* TO 'prog3user'@'%';
-FLUSH PRIVILEGES;
-```
-
-3. Ejecutar el script de stored procedures:
+#### 1. Crear BD + tablas base + datos semilla
 
 ```sh
-mysql -u root -p prog3_turnos < sql/sp_estadisticas.sql
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS prog3_turnos;"
+mysql -u root -p prog3_turnos < sql/schema.sql
+```
+
+#### 2. Fix porcentaje descuento (backfill)
+
+```sh
+mysql -u root -p prog3_turnos < sql/fix_porcentaje_descuento.sql
+```
+
+⚠️ Convierte porcentajes guardados como enteros (ej: `20`) a decimales (`0.20`).
+Ejecutar **antes** de crear obras sociales nuevas.
+
+#### 3. Tabla auditoría (feature extra)
+
+```sh
+mysql -u root -p prog3_turnos < sql/tabla-auditoria.sql
+```
+
+#### 4. Columnas recuperación de contraseña
+
+```sh
+mysql -u root -p prog3_turnos < sql/agregar_columnas_recuperacion.sql
+```
+
+#### 5. Stored procedures
+
+```sh
+mysql -u root -p prog3_turnos < src/procedimientos/sp_estadisticas_atenciones.sql
 ```
 
 ### Ejecutar el servidor
@@ -81,9 +100,3 @@ npm start
 - Lucas Ruiz
 - Matías Gabriel Terrera
 - Juan Manuel Zornn
-
-## Licencia
-
-Este proyecto está bajo la Licencia MIT.
-
-node scripts/probar-endpoints.mjs

@@ -8,17 +8,33 @@ import { router as v1AuthRutas } from './rutas/v1/authRutas.js';
 import { router as pacientesRutas } from './rutas/v1/pacientesRutas.js';
 import { router as v1EstadisticasRutas } from './rutas/v1/estadisticasRutas.js';
 import { router as v1UsuariosRutas } from './rutas/v1/usuariosRutas.js';
+import { router as v1AuditoriaRutas } from './rutas/v1/auditoriaRutas.js';
 import { swaggerUi, swaggerDocument } from './config/swagger.js';
 import cors from 'cors';
 import passport from 'passport';
 import morgan from 'morgan';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { autenticarJWT } from './middlewares/autenticarJWT.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // estrategias
 import { estrategia, validacion } from './config/passport.js';
+
+// middleware de auditoría
+import auditoria from './middlewares/auditoria.js';
+
+// Cargar variables de entorno primero
+process.loadEnvFile();
+
+// Validar variables de entorno críticas
+if (!process.env.JWT_SECRET) {
+  console.error(
+    'ERROR: JWT_SECRET no está configurado en las variables de entorno',
+  );
+  process.exit(1);
+}
 
 const app = express();
 app.use(express.json());
@@ -48,45 +64,22 @@ app.get('/', (req, res) => {
 // SWAGGER
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// VINCULAR RUTAS MODULARES / usar passport acá
+// VINCULAR RUTAS MODULARES /
 app.use(
   '/api/v1/especialidades',
-  passport.authenticate('jwt', { session: false }),
+  autenticarJWT,
+  auditoria,
   v1EspecialidadesRutas,
 );
-app.use(
-  '/api/v1/obras-sociales',
-  passport.authenticate('jwt', { session: false }),
-  v1ObrasSociales,
-);
-app.use(
-  '/api/v1/turnos',
-  passport.authenticate('jwt', { session: false }),
-  v1TurnosReservas,
-);
-app.use(
-  '/api/v1/medicos',
-  passport.authenticate('jwt', { session: false }),
-  v1MedicosRutas,
-);
-app.use(
-  '/api/v1/pacientes',
-  passport.authenticate('jwt', { session: false }),
-  pacientesRutas,
-);
-app.use(
-  '/api/v1/estadisticas',
-  passport.authenticate('jwt', { session: false }),
-  v1EstadisticasRutas,
-);
-app.use(
-  '/api/v1/usuarios',
-  passport.authenticate('jwt', { session: false }),
-  v1UsuariosRutas,
-);
+app.use('/api/v1/obras-sociales', autenticarJWT, auditoria, v1ObrasSociales);
+app.use('/api/v1/turnos', autenticarJWT, auditoria, v1TurnosReservas);
+app.use('/api/v1/medicos', autenticarJWT, auditoria, v1MedicosRutas);
+app.use('/api/v1/pacientes', autenticarJWT, auditoria, pacientesRutas);
+app.use('/api/v1/estadisticas', autenticarJWT, auditoria, v1EstadisticasRutas);
+app.use('/api/v1/usuarios', autenticarJWT, auditoria, v1UsuariosRutas);
+app.use('/api/v1/auditoria', autenticarJWT, v1AuditoriaRutas);
 app.use('/api/v1/auth', v1AuthRutas);
 
-process.loadEnvFile();
 const PUERTO = process.env.PUERTO || 3000;
 
 app.listen(PUERTO, () => {
