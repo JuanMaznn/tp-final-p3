@@ -30,7 +30,9 @@ process.loadEnvFile();
 
 // Validar variables de entorno críticas
 if (!process.env.JWT_SECRET) {
-  console.error('ERROR: JWT_SECRET no está configurado en las variables de entorno');
+  console.error(
+    'ERROR: JWT_SECRET no está configurado en las variables de entorno',
+  );
   process.exit(1);
 }
 
@@ -62,16 +64,19 @@ app.get('/', (req, res) => {
 // SWAGGER
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// VINCULAR RUTAS MODULARES / usar middleware autenticarJWT + auditoría
-app.use('/api/v1/especialidades', autenticarJWT, auditoria, v1EspecialidadesRutas);
+// VINCULAR RUTAS MODULARES /
+app.use(
+  '/api/v1/especialidades',
+  autenticarJWT,
+  auditoria,
+  v1EspecialidadesRutas,
+);
 app.use('/api/v1/obras-sociales', autenticarJWT, auditoria, v1ObrasSociales);
 app.use('/api/v1/turnos', autenticarJWT, auditoria, v1TurnosReservas);
 app.use('/api/v1/medicos', autenticarJWT, auditoria, v1MedicosRutas);
 app.use('/api/v1/pacientes', autenticarJWT, auditoria, pacientesRutas);
 app.use('/api/v1/estadisticas', autenticarJWT, auditoria, v1EstadisticasRutas);
 app.use('/api/v1/usuarios', autenticarJWT, auditoria, v1UsuariosRutas);
-// Consulta del historial (solo admin). SIN el middleware `auditoria` para no
-// auto-registrar las consultas al propio log.
 app.use('/api/v1/auditoria', autenticarJWT, v1AuditoriaRutas);
 app.use('/api/v1/auth', v1AuthRutas);
 

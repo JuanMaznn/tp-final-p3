@@ -128,10 +128,7 @@ export default class TurnosControlador {
   marcarAtendido = async (req, res) => {
     try {
       const { id_turno } = req.params;
-      const result = await this.turnos.marcarAtendido(
-        id_turno,
-        req.user.id_usuario,
-      );
+      const result = await this.turnos.marcarAtendido(id_turno, req.user);
       if (!result) {
         return res.status(404).json({
           estado: false,

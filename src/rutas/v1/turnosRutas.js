@@ -78,7 +78,7 @@ router.put(
 
 router.put(
   '/:id_turno/atender',
-  autorizarUsuarios([1]),
+  autorizarUsuarios([1, 3]),
   [
     param('id_turno').isInt().withMessage('id_turno debe ser entero.'),
     validarCampos,

@@ -16,6 +16,10 @@ export default class MedicosServicio {
     return this.medicos.buscarId(id);
   };
 
+  buscarPorIdUsuario = async (id_usuario) => {
+    return this.medicos.buscarPorIdUsuario(id_usuario);
+  };
+
   buscarPorEspecialidad = async (id_especialidad) => {
     const esp = await this.especialidades.buscarPorId(id_especialidad);
     if (esp.length === 0)

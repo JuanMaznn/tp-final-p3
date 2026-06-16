@@ -314,7 +314,7 @@
   },
   "/api/v1/turnos/{id_turno}/atender": {
     "put": {
-      "summary": "Marca un turno como atendido (Medico)",
+      "summary": "Marca un turno como atendido (Medico o Admin)",
       "tags": ["Turnos"],
       "security": [{ "bearerAuth": [] }],
       "parameters": [
@@ -345,7 +345,7 @@
         "400": { "description": "id_turno debe ser entero." },
         "404": { "description": "Turno no encontrado o no te pertenece" },
         "401": { "description": "No autorizado" },
-        "403": { "description": "Acceso denegado (solo medico)" },
+        "403": { "description": "Acceso denegado (solo medico o admin)" },
         "500": { "description": "Error interno" }
       }
     }

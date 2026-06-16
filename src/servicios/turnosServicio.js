@@ -104,9 +104,21 @@ export default class TurnosServicio {
     return this.turnos.buscarPorId(id_nuevo);
   };
 
-  marcarAtendido = async (id_turno, id_medico) => {
-    const turno = await this.turnos.turnoPerteneceAMedico(id_turno, id_medico);
+  marcarAtendido = async (id_turno, usuario) => {
+    const turno = await this.turnos.buscarPorId(id_turno);
     if (!turno) return null;
+
+    if (usuario.rol === 1) {
+      const medico = await this.medicos.buscarPorIdUsuario(usuario.id_usuario);
+      if (!medico) return null;
+
+      const turnoDelMedico = await this.turnos.turnoPerteneceAMedico(
+        id_turno,
+        medico.id_medico,
+      );
+      if (!turnoDelMedico) return null;
+    }
+
     return this.turnos.marcarAtendido(id_turno);
   };
 }

@@ -15,6 +15,14 @@ export default class Medicos {
     return medico[0];
   };
 
+  buscarPorIdUsuario = async (id_usuario) => {
+    const sql = `SELECT m.* FROM medicos m
+                 INNER JOIN usuarios u ON u.id_usuario = m.id_usuario
+                 WHERE m.id_usuario = ? AND u.activo = 1`;
+    const [medico] = await pool.execute(sql, [id_usuario]);
+    return medico[0];
+  };
+
   actualizar = async (id_medico, datos) => {
     const sql =
       'UPDATE medicos SET id_especialidad = ?, matricula = ?, descripcion = ?, valor_consulta = ? WHERE id_medico = ?';
