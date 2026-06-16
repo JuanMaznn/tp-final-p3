@@ -55,6 +55,7 @@ router.post(
 router.put(
   '/:id_usuario',
   autorizarUsuarios([3]),
+  upload.single('foto'),
   [
     param('id_usuario', 'El parámetro debe ser entero').isInt(),
     check('documento').optional(),
@@ -85,7 +86,6 @@ router.put(
       .withMessage('Valor consulta debe ser un número positivo'),
     validarCampos,
   ],
-  upload.single('foto'),
   usuariosControlador.modificar,
 );
 

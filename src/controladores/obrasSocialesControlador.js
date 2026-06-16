@@ -25,7 +25,7 @@ export default class ObrasSocialesControlador {
           .status(404)
           .json({ estado: false, msg: 'Obra Social no encontrada' });
       }
-      res.status(200).json({ estado: true, obraSocial: obraSocial });
+      res.status(200).json({ estado: true, obraSocial: obraSocial[0] });
     } catch (error) {
       console.log(`Error en GET /obras-sociales/:id ${error}`);
       res

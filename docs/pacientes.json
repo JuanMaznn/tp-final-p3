@@ -1,4 +1,50 @@
 {
+  "components": {
+    "schemas": {
+      "PacienteCompleto": {
+        "type": "object",
+        "properties": {
+          "id_paciente": { "type": "integer", "example": 1 },
+          "id_usuario": { "type": "integer", "example": 5 },
+          "apellido": { "type": "string", "example": "Lopez" },
+          "nombres": { "type": "string", "example": "Jacinto" },
+          "email": { "type": "string", "example": "lopjac@correo.com" },
+          "id_obra_social": { "type": "integer", "example": 1 },
+          "descripcion_obra_social": { "type": "string", "example": "jer" },
+          "foto_path": { "type": "string", "example": "" }
+        }
+      },
+      "PacienteResumen": {
+        "type": "object",
+        "properties": {
+          "id_paciente": { "type": "integer", "example": 1 },
+          "id_usuario": { "type": "integer", "example": 5 },
+          "id_obra_social": { "type": "integer", "example": 1 }
+        }
+      },
+      "PacienteObraSocialRequest": {
+        "type": "object",
+        "required": ["id_obra_social"],
+        "properties": {
+          "id_obra_social": { "type": "integer", "example": 2 }
+        }
+      },
+      "PacienteMessage": {
+        "type": "object",
+        "properties": {
+          "estado": { "type": "boolean", "example": true },
+          "mensaje": { "type": "string", "example": "Obra social asociada correctamente." }
+        }
+      },
+      "PacienteError": {
+        "type": "object",
+        "properties": {
+          "estado": { "type": "boolean", "example": false },
+          "mensaje": { "type": "string", "example": "Paciente no encontrado" }
+        }
+      }
+    }
+  },
   "/api/v1/pacientes": {
     "get": {
       "summary": "Lista todos los pacientes",
@@ -16,19 +62,7 @@
                   "mensaje": { "type": "string", "example": "Pacientes encontrados." },
                   "pacientes": {
                     "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "id_paciente": { "type": "integer" },
-                        "id_usuario": { "type": "integer" },
-                        "apellido": { "type": "string" },
-                        "nombres": { "type": "string" },
-                        "email": { "type": "string" },
-                        "id_obra_social": { "type": "integer" },
-                        "descripcion_obra_social": { "type": "string" },
-                        "foto_path": { "type": "string" }
-                      }
-                    }
+                    "items": { "$ref": "#/components/schemas/PacienteCompleto" }
                   }
                 }
               }
@@ -62,14 +96,7 @@
                 "type": "object",
                 "properties": {
                   "estado": { "type": "boolean", "example": true },
-                  "paciente": {
-                    "type": "object",
-                    "properties": {
-                      "id_paciente": { "type": "integer" },
-                      "id_usuario": { "type": "integer" },
-                      "id_obra_social": { "type": "integer" }
-                    }
-                  }
+                  "paciente": { "$ref": "#/components/schemas/PacienteResumen" }
                 }
               }
             }
@@ -99,13 +126,7 @@
         "required": true,
         "content": {
           "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id_obra_social": { "type": "integer" }
-              },
-              "required": ["id_obra_social"]
-            }
+            "schema": { "$ref": "#/components/schemas/PacienteObraSocialRequest" }
           }
         }
       },
@@ -114,13 +135,7 @@
           "description": "Obra social asociada correctamente",
           "content": {
             "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "estado": { "type": "boolean", "example": true },
-                  "mensaje": { "type": "string", "example": "Obra social asociada correctamente." }
-                }
-              }
+              "schema": { "$ref": "#/components/schemas/PacienteMessage" }
             }
           }
         },

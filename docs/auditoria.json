@@ -1,4 +1,24 @@
 {
+  "components": {
+    "schemas": {
+      "AuditoriaRegistro": {
+        "type": "object",
+        "properties": {
+          "id_auditoria": { "type": "integer", "example": 12 },
+          "id_usuario": { "type": "integer", "nullable": true, "example": 1 },
+          "usuario": { "type": "string", "example": "Benito Fernandez" },
+          "usuario_email": { "type": "string", "example": "ferben@correo.com" },
+          "metodo": { "type": "string", "example": "POST" },
+          "ruta": { "type": "string", "example": "/api/v1/especialidades" },
+          "accion": { "type": "string", "example": "CREAR" },
+          "entidad": { "type": "string", "example": "especialidades" },
+          "id_entidad": { "type": "integer", "nullable": true, "example": 5 },
+          "status_code": { "type": "integer", "example": 201 },
+          "fecha_hora": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  },
   "/api/v1/auditoria": {
     "get": {
       "summary": "Lista el historial de auditoría con filtros (Admin)",
@@ -24,20 +44,14 @@
           "name": "metodo",
           "in": "query",
           "required": false,
-          "schema": {
-            "type": "string",
-            "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"]
-          },
+          "schema": { "type": "string", "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"] },
           "description": "Método HTTP de la acción"
         },
         {
           "name": "accion",
           "in": "query",
           "required": false,
-          "schema": {
-            "type": "string",
-            "enum": ["CONSULTAR", "CREAR", "ACTUALIZAR", "ELIMINAR"]
-          }
+          "schema": { "type": "string", "enum": ["CONSULTAR", "CREAR", "ACTUALIZAR", "ELIMINAR"] }
         },
         {
           "name": "desde",
@@ -116,19 +130,13 @@
           "name": "accion",
           "in": "query",
           "required": false,
-          "schema": {
-            "type": "string",
-            "enum": ["CONSULTAR", "CREAR", "ACTUALIZAR", "ELIMINAR"]
-          }
+          "schema": { "type": "string", "enum": ["CONSULTAR", "CREAR", "ACTUALIZAR", "ELIMINAR"] }
         },
         {
           "name": "metodo",
           "in": "query",
           "required": false,
-          "schema": {
-            "type": "string",
-            "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"]
-          },
+          "schema": { "type": "string", "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"] },
           "description": "Método HTTP de la acción"
         },
         {
@@ -217,26 +225,6 @@
         "401": { "description": "No autorizado" },
         "403": { "description": "Acceso denegado (solo admin)" },
         "500": { "description": "Error interno" }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "AuditoriaRegistro": {
-        "type": "object",
-        "properties": {
-          "id_auditoria": { "type": "integer", "example": 12 },
-          "id_usuario": { "type": "integer", "nullable": true, "example": 1 },
-          "usuario": { "type": "string", "example": "Admin Administrador" },
-          "usuario_email": { "type": "string", "example": "admin@turnos.local" },
-          "metodo": { "type": "string", "example": "POST" },
-          "ruta": { "type": "string", "example": "/api/v1/especialidades" },
-          "accion": { "type": "string", "example": "CREAR" },
-          "entidad": { "type": "string", "example": "especialidades" },
-          "id_entidad": { "type": "integer", "nullable": true, "example": 5 },
-          "status_code": { "type": "integer", "example": 201 },
-          "fecha_hora": { "type": "string", "format": "date-time" }
-        }
       }
     }
   }

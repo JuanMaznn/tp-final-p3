@@ -126,10 +126,7 @@
                 "type": "object",
                 "properties": {
                   "estado": { "type": "boolean", "example": true },
-                  "obraSocial": {
-                    "type": "array",
-                    "items": { "$ref": "#/components/schemas/ObraSocial" }
-                  }
+                  "obraSocial": { "$ref": "#/components/schemas/ObraSocial" }
                 }
               }
             }
