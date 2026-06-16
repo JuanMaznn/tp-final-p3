@@ -71,6 +71,16 @@ mysql -u root -p prog3_turnos < sql/agregar_columnas_recuperacion.sql
 mysql -u root -p prog3_turnos < src/procedimientos/sp_estadisticas_atenciones.sql
 ```
 
+⚠️ Importante: además de crear el stored procedure, hay que otorgarle permiso
+de ejecución al usuario de MySQL que usa la aplicación (`DB_USER` del archivo `.env`).
+
+Ejemplo:
+
+```sql
+GRANT EXECUTE ON PROCEDURE prog3_turnos.sp_estadisticas_atenciones TO 'prog3user'@'localhost';
+FLUSH PRIVILEGES;
+```
+
 ### Ejecutar el servidor
 
 #### Modo Desarrollo
