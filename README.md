@@ -40,7 +40,8 @@ Ejecutar en **este orden** con un usuario con permisos de creación (root):
 #### 1. Crear BD + tablas base + datos semilla
 
 ```sh
-mysql -u root -p < sql/schema.sql
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS prog3_turnos;"
+mysql -u root -p prog3_turnos < sql/schema.sql
 ```
 
 #### 2. Fix porcentaje descuento (backfill)
